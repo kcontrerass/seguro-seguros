@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0E1015;
+  /* Dark Navy Background */
+  --foreground: #ffffff;
+  --primary: #B69146;
+  /* Gold */
+  --muted: #A1A1AA;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-primary: var(--primary);
+  --color-muted: var(--muted);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+.section {
+  background: #c8a04d;
+  padding: 60px 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+
+/* HERO diagonal overlay */
+.clip-diagonal {
+  clip-path: polygon(0 0, 100% 0, 65% 100%, 0% 100%);
+}
+
+/* Fix para que el hero se vea elegante */
+.hero-overlay {
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.5),
+      #0E1015);
 }
