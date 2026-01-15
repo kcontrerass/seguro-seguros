@@ -6,51 +6,52 @@ import { ShieldCheck, BarChart3, Globe, Heart } from "lucide-react";
 export default async function Hero() {
     const data = await getHeroData();
 
-    // Helper to find data in Gutenberg structure
-    const findBlockByType = (blocks: any[], type: string): any => {
-        for (const block of blocks) {
-            if (block.type === type) return block;
-            if (block.blocks) {
-                const found: any = findBlockByType(block.blocks, type);
-                if (found) return found;
-            }
-            if (block.columns) {
-                for (const col of block.columns) {
-                    const found: any = findBlockByType(col.blocks, type);
-                    if (found) return found;
-                }
-            }
-        }
-        return null;
-    };
+    // The new structure has a main group as the first element
+    const mainGroup = data?.gutenberg_structure?.[0];
+    const mainBlocks = mainGroup?.blocks || [];
 
-    const headingBlock = data ? findBlockByType(data.gutenberg_structure, "core/heading") : null;
-    const paragraphBlock = data ? findBlockByType(data.gutenberg_structure, "core/paragraph") : null;
-    const imageBlock = data ? findBlockByType(data.gutenberg_structure, "core/image") : null;
-    console.log(data?.gutenberg_structure[1].blocks[2].content);
-    const descriptionBanner = data?.gutenberg_structure[1].blocks[2].content;
-    const title = headingBlock?.content || "";
-    const description = paragraphBlock?.content || "Asesoría independiente y personalizada para personas, PYMES y empresas en Guatemala.";
-    const backgroundImage = imageBlock?.url || "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop";
+    // Extract background image from group attributes
+    const backgroundImage = mainGroup?.attributes?.style?.background?.backgroundImage?.url ||
+        "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop";
 
-    const features = [
-        {
-            icon: ShieldCheck,
-            text: "Respaldo de las principales aseguradoras.",
-        },
-        {
-            icon: BarChart3,
-            text: "Asesoría profesional personalizada.",
-        },
-        {
-            icon: Globe,
-            text: "Cobertura integral para cada necesidad.",
-        },
-        {
-            icon: Heart,
-            text: "Atención cercana y confiable.",
-        },
-    ];
+    // Extract heading and paragraph
+    const headingBlock = mainBlocks.find((b: any) => b.type === "core/heading");
+    const paragraphBlock = mainBlocks.find((b: any) => b.type === "core/paragraph");
+
+    const title = headingBlock?.content || "Tu aliado estratégico en protección patrimonial y bienestar humano";
+    const description = paragraphBlock?.content || "Asesoría independiente y personalizada para personas, PYMES y empresas en Guatemala";
+
+    // Extract buttons
+    const buttonsGroup = mainBlocks.find((b: any) => b.type === "core/group" && b.blocks?.some((sb: any) => sb.type === "core/buttons"));
+    const buttonsBlock = buttonsGroup?.blocks?.find((sb: any) => sb.type === "core/buttons");
+    const buttons = buttonsBlock?.buttons || [];
+
+    // Extract features from columns
+    const columnsBlock = mainBlocks.find((b: any) => b.type === "core/columns");
+    const featureColumns = columnsBlock?.columns?.slice(1) || []; // Skip the first logo column
+
+    // Extract logo from the first column
+    const logoBlock = columnsBlock?.columns?.[0]?.blocks?.find((b: any) => b.type === "core/image");
+    const logoUrl = logoBlock?.url || "/logohome.svg";
+
+    const features = featureColumns.map((col: any) => {
+        const textBlock = col.blocks?.find((b: any) => b.type === "core/paragraph");
+        const imgBlock = col.blocks?.find((b: any) => b.type === "core/image");
+
+        // Map back to Lucide icons for now to maintain UI consistency, or use the image URL
+        let icon = ShieldCheck;
+        const text = textBlock?.content || "";
+
+        if (text.includes("Asesoría")) icon = BarChart3;
+        if (text.includes("Cobertura")) icon = Globe;
+        if (text.includes("Atención")) icon = Heart;
+
+        return {
+            icon,
+            text,
+            imgUrl: imgBlock?.url
+        };
+    });
 
     return (
         <section className="relative w-full  flex flex-col justify-center bg-black overflow-hidden">
@@ -69,43 +70,48 @@ export default async function Hero() {
             <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-50 flex-grow  flex flex-col justify-center">
                 <div className="max-w-4xl">
                     <h1 className="text-3xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] w-[450px] mb-6 font-heading">
-                        {title ? (
-                            <div>
-                                <span className="block  ">{title}</span>
-                                <span className="block text-primary ">
-                                    {data?.gutenberg_structure?.[1]?.blocks?.[1]?.content || "EN PROTECCIÓN PATRIMONIAL"}
-                                </span>
-                            </div>
-                        ) : (
-                            <>
-                                <span className="block">TU ALIADO ESTRATÉGICO</span>
-                                <span className="block text-primary">EN PROTECCIÓN PATRIMONIAL</span>
-                                <span className="block text-primary">Y BIENESTAR HUMANO</span>
-                            </>
-                        )}
+                        {title}
                     </h1>
-
 
                     {/* Gold Underline */}
                     <div className="w-24 h-1.5 bg-primary mb-8 rounded-full"></div>
 
                     <p className="text-lg md:text-2xl text-white font-sans max-w-2xl leading-relaxed mb-10 drop-shadow-md">
-                        {descriptionBanner}
+                        {description}
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-5">
-                        <Link
-                            href="#contact"
-                            className="px-8 py-4 bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black transition-all duration-300 text-center rounded-lg shadow-lg"
-                        >
-                            Solicita tu cotización
-                        </Link>
-                        <Link
-                            href="#products"
-                            className="px-8 py-4 bg-primary border border-primary text-black font-bold hover:bg-primary/90 transition-all duration-300 text-center rounded-lg shadow-lg shadow-primary/20"
-                        >
-                            Conoce nuestros productos
-                        </Link>
+                        {buttons.length > 0 ? (
+                            buttons.map((btn: any, idx: number) => (
+                                <Link
+                                    key={idx}
+                                    href={btn.url || "#"}
+                                    target={btn.linkTarget}
+                                    rel={btn.rel}
+                                    className={`px-8 py-4 ${idx === 0
+                                            ? "bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black"
+                                            : "bg-primary border border-primary text-black font-bold hover:bg-primary/90 shadow-primary/20"
+                                        } transition-all duration-300 text-center rounded-lg shadow-lg`}
+                                >
+                                    {btn.text}
+                                </Link>
+                            ))
+                        ) : (
+                            <>
+                                <Link
+                                    href="#contact"
+                                    className="px-8 py-4 bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black transition-all duration-300 text-center rounded-lg shadow-lg"
+                                >
+                                    Solicita tu cotización
+                                </Link>
+                                <Link
+                                    href="#products"
+                                    className="px-8 py-4 bg-primary border border-primary text-black font-bold hover:bg-primary/90 transition-all duration-300 text-center rounded-lg shadow-lg shadow-primary/20"
+                                >
+                                    Conoce nuestros productos
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -114,11 +120,11 @@ export default async function Hero() {
             <div className="container mx-auto px-6 md:px-16 lg:pl-24 relative z-20 pb-12 w-full">
                 <div className="flex flex-col lg:flex-row items-end gap-8 mt-20 ">
                     {/* Stylized Logo S */}
-                    <Image src="/logohome.svg" className="w-16 h-16 md:w-20 hidden lg:block  md:h-20 lg:mr-12" alt="Logo" width={60} height={60} />
+                    <Image src={logoUrl} className="w-16 h-16 md:w-20 hidden lg:block  md:h-20 lg:mr-12" alt="Logo" width={60} height={60} />
 
                     {/* Features Bar */}
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden w-full">
-                        {features.map((feature, index) => (
+                        {features.map((feature: any, index: number) => (
                             <div
                                 key={index}
                                 className={`
@@ -128,7 +134,11 @@ export default async function Hero() {
                         `}
                             >
                                 <div className="bg-white/10 p-2 rounded-full shrink-0">
-                                    <feature.icon className="w-5 h-5 text-primary" />
+                                    {feature.imgUrl ? (
+                                        <Image src={feature.imgUrl} alt="" width={20} height={20} className="w-5 h-5" />
+                                    ) : (
+                                        <feature.icon className="w-5 h-5 text-primary" />
+                                    )}
                                 </div>
                                 <p className="text-[15px] font-medium text-white/90 leading-tight">
                                     {feature.text}

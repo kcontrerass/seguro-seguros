@@ -33,7 +33,7 @@ async function fetchFromRest(endpoint: string) {
  */
 export async function getHeroData(): Promise<HomeData | null> {
   try {
-    const data = await fetchFromRest("/gutenberg-api/v1/pages/7");
+    const data = await fetchFromRest("/gutenberg-api/v1/pages/inicio");
     return data || null;
   } catch (error) {
     console.error("Error fetching home data:", error);

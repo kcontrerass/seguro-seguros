@@ -33,7 +33,7 @@ export default function Contacto() {
 
             {/* STRIP DE CONTACTO */}
             <div className=" mx-auto relative z-20 pb-12 w-full -mt-20 mb-12 md:mb-32 px-6 md:px-20">
-                <div className="flex flex-col xl:flex-row items-end gap-8">
+                <div className="flex flex-col xl:flex-row md:items-end items-center gap-8">
                     {/* Stylized Logo S */}
                     <span className="text-xl md:text-[30px] font-heading relative font-[400] -top-10 text-primary">NUESTROS <br />
                         CANALES DIRECTOS</span>
