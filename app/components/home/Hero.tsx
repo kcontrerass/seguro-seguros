@@ -53,7 +53,7 @@ export default async function Hero() {
     ];
 
     return (
-        <section className="relative w-full h-screen min-h-[800px] flex flex-col justify-center bg-black overflow-hidden">
+        <section className="relative w-full  flex flex-col justify-center bg-black overflow-hidden">
             {/* Background Image Overlay */}
             <div
                 className="absolute inset-0 opacity-60 bg-cover bg-center"
@@ -66,13 +66,13 @@ export default async function Hero() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
             {/* Main Content */}
-            <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-20 flex-grow flex flex-col justify-center">
+            <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-50 flex-grow  flex flex-col justify-center">
                 <div className="max-w-4xl">
-                    <h1 className="text-5xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] w-[450px] mb-6 font-heading">
+                    <h1 className="text-3xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] w-[450px] mb-6 font-heading">
                         {title ? (
                             <div>
-                                <span className="block">{title}</span>
-                                <span className="block text-primary">
+                                <span className="block  ">{title}</span>
+                                <span className="block text-primary ">
                                     {data?.gutenberg_structure?.[1]?.blocks?.[1]?.content || "EN PROTECCIÓN PATRIMONIAL"}
                                 </span>
                             </div>
