@@ -2,6 +2,10 @@ import { GraphQLClient } from 'graphql-request';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string;
 
+if (!API_URL) {
+  throw new Error("NEXT_PUBLIC_WORDPRESS_API_URL is missing from environment variables. Please check .env.local");
+}
+
 export const client = new GraphQLClient(API_URL);
 
 // --- Types ---
