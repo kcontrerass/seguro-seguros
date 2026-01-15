@@ -5,7 +5,7 @@ import { ShieldCheck, BarChart3, Globe, Heart } from "lucide-react";
 
 export default async function Hero() {
     const data = await getHeroData();
-
+    console.log(data);
     const features = [
         {
             icon: ShieldCheck,
@@ -29,7 +29,8 @@ export default async function Hero() {
         <section className="relative w-full h-screen min-h-[800px] flex flex-col justify-center bg-black overflow-hidden">
             {/* Background Image Overlay */}
             <div
-                className="absolute inset-0 opacity-60 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop')] bg-cover bg-center"
+                className="absolute inset-0 opacity-60 bg-cover bg-center"
+                style={{ backgroundImage: `url('${data?.bannerprincipal?.node?.sourceUrl || "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop"}')` }}
                 aria-hidden="true"
             />
 
@@ -41,10 +42,22 @@ export default async function Hero() {
             <div className="container mx-auto px-30 relative z-10 pt-20 flex-grow flex flex-col justify-center">
                 <div className="max-w-4xl">
                     <h1 className="text-5xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] mb-6 font-heading">
-                        <span className="block">TU ALIADO ESTRATÉGICO</span>
-                        <span className="block text-primary">EN PROTECCIÓN PATRIMONIAL</span>
-                        <span className="block text-primary">Y BIENESTAR HUMANO</span>
+                        {data?.tituloprincipal ? (
+                            <span
+                                className="block"
+                                dangerouslySetInnerHTML={{
+                                    __html: data.tituloprincipal,
+                                }}
+                            />
+                        ) : (
+                            <>
+                                <span className="block">TU ALIADO ESTRATÉGICO</span>
+                                <span className="block text-primary">EN PROTECCIÓN PATRIMONIAL</span>
+                                <span className="block text-primary">Y BIENESTAR HUMANO</span>
+                            </>
+                        )}
                     </h1>
+
 
                     {/* Gold Underline */}
                     <div className="w-24 h-1.5 bg-primary mb-8 rounded-full"></div>
