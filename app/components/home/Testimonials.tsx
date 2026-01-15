@@ -47,7 +47,7 @@ export default function Testimonials() {
     return (
         <section className="py-24 bg-[#14161C] border-t border-white/5 overflow-hidden">
             <div className="container mx-auto px-6">
-                <div className="mb-12 text-left relative left-35">
+                <div className="mb-12 text-left relative md:ml-32">
                     <h2 className="text-3xl md:text-5xl font-heading font-bold text-white mb-2 uppercase">
                         LO QUE DICEN NUESTROS CLIENTES
                     </h2>
@@ -56,7 +56,7 @@ export default function Testimonials() {
                     </h3>
                 </div>
 
-                <div className="relative w-full left-35">
+                <div className="relative w-full md:ml-32">
                     {/* Carousel Viewport */}
                     <div className="overflow-hidden" ref={emblaRef}>
                         <div className="flex -ml-4">

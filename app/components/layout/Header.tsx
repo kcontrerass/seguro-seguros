@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, Facebook, Instagram } from "lucide-react";
-import ProductsMenu from "./ProductsMenu";
+import { Menu, X, Facebook, Instagram, ChevronDown } from "lucide-react";
+import ProductsMenu, { products } from "./ProductsMenu";
 
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
+    const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -32,7 +33,7 @@ export default function Header() {
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-black/80 backdrop-blur-md py-4" : "bg-transparent py-6"
                 }`}
         >
-            <div className="container mx-auto px-30 flex items-center justify-between">
+            <div className="container mx-auto px-6 md:px-16 lg:px-24 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3">
                     <Image
@@ -40,7 +41,7 @@ export default function Header() {
                         alt="Seguro Seguros Logo"
                         width={120}
                         height={120}
-                        className="w-60 h-auto"
+                        className="w-32 md:w-48 lg:w-60 h-auto"
                     />
 
                 </Link>
@@ -97,16 +98,43 @@ export default function Header() {
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/10 py-6 px-6 flex flex-col gap-6">
+                <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/10 py-6 px-6 flex flex-col gap-6 h-screen overflow-y-auto pb-20">
                     {navLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className="text-lg font-medium text-white hover:text-primary"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            {link.name}
-                        </Link>
+                        link.name === "PRODUCTOS" ? (
+                            <div key={link.name} className="flex flex-col gap-4">
+                                <button
+                                    onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                                    className="text-lg font-medium text-white hover:text-primary flex items-center justify-between"
+                                >
+                                    {link.name}
+                                    <ChevronDown className={`w-5 h-5 transition-transform ${isMobileProductsOpen ? "rotate-180" : ""}`} />
+                                </button>
+
+                                {isMobileProductsOpen && (
+                                    <div className="flex flex-col gap-4 pl-4 border-l border-white/10 ml-2">
+                                        {products.map((product) => (
+                                            <Link
+                                                key={product.title}
+                                                href={product.href}
+                                                className="text-[15px] font-medium text-white/70 hover:text-primary"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                            >
+                                                {product.title}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                className="text-lg font-medium text-white hover:text-primary"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                {link.name}
+                            </Link>
+                        )
                     ))}
                     <div className="flex gap-6 mt-4">
                         <a href="#" className="text-white hover:text-primary">

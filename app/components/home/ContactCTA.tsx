@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function ContactCTA() {
     return (
-        <section id="contact" className="relative py-32 pl-50 bg-[#0E1015] overflow-hidden">
+        <section id="contact" className="relative py-32 pl-0 md:pl-20 bg-[#0E1015] overflow-hidden">
             {/* Texture/Background Image */}
             <div
                 className="absolute inset-0  bg-[url('/contactohome.png')] bg-cover bg-fixed bg-center "

@@ -1,170 +1,64 @@
-import { GraphQLClient } from 'graphql-request';
+// lib/wordpress.ts
 
-const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string;
-
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_WORDPRESS_API_URL is missing from environment variables. Please check .env.local");
-}
-
-export const client = new GraphQLClient(API_URL);
+const BASE_URL = "https://segurosegurosbe.aumenta.do/wp-json";
 
 // --- Types ---
 
-export interface Post {
-  id: string;
+
+
+export interface HomeData {
+  id: number;
   title: string;
   slug: string;
-  excerpt: string;
-  content: string;
-  date: string;
-  featuredImage?: {
-    node: {
-      sourceUrl: string;
-      altText: string;
-    };
-  };
+  gutenberg_structure: any[];
+  sections: any[];
 }
-
-export interface Page {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-}
-
-export interface MenuItem {
-  id: string;
-  label: string;
-  path: string;
-  parentId?: string;
-  childItems?: {
-    nodes: MenuItem[];
-  };
-}
-
-// --- Queries ---
-
-const TASKS_QUERY = `
-  query GetPosts {
-    posts(first: 20) {
-      nodes {
-        id
-        title
-        slug
-        excerpt
-        content
-        date
-        featuredImage {
-          node {
-            sourceUrl
-            altText
-          }
-        }
-      }
-    }
-  }
-`;
-
-const PAGES_QUERY = `
-  query GetPages {
-    pages(first: 20) {
-      nodes {
-        id
-        title
-        slug
-        content
-      }
-    }
-  }
-`;
-
-const MENU_QUERY = `
-  query GetMenu($id: ID!, $idType: MenuNodeIdTypeEnum!) {
-    menu(id: $id, idType: $idType) {
-      menuItems(first: 100) {
-        nodes {
-          id
-          label
-          path
-          parentId
-          childItems {
-            nodes {
-              id
-              label
-              path
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 // --- Fetch Functions ---
 
-export async function getAllPosts(): Promise<Post[]> {
-  const data: any = await client.request(TASKS_QUERY);
-  return data?.posts?.nodes || [];
+async function fetchFromRest(endpoint: string) {
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    next: { revalidate: 60 } // Cache for 60 seconds
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch from WordPress REST API: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
-export async function getAllPages(): Promise<Page[]> {
-  const data: any = await client.request(PAGES_QUERY);
-  return data?.pages?.nodes || [];
-}
-
-export async function getMenu(menuName: string): Promise<MenuItem[]> {
-  const variables = {
-    id: menuName,
-    idType: "NAME"
-  };
-  const data: any = await client.request(MENU_QUERY, variables);
-  return data?.menu?.menuItems?.nodes || [];
-}
-
-// Assumes there's a menu named "Footer" or similar logic
-export async function getFooterData(): Promise<MenuItem[]> {
-  return getMenu('Footer');
-}
-
-// --- Home Page Query ---
-
-export interface HomeData {
-  tituloprincipal: string;
-  bannerprincipal: {
-    node: {
-      sourceUrl: string;
-      altText: string;
-      mediaDetails: {
-        width: number;
-        height: number;
-      };
-    };
-  };
-}
-
-const HOME_QUERY = `
-  query GetHomePage {
-  paginaDeInicios {
-    nodes {
-      inicio {
-        tituloprincipal
-        bannerprincipal {
-          node {
-            sourceUrl
-            altText
-            mediaDetails {
-              width
-              height
-            }
-          }
-        }
-      }
-    }
+/**
+ * Fetches the home page data (ID 7) from the custom Gutenberg API.
+ */
+export async function getHeroData(): Promise<HomeData | null> {
+  try {
+    const data = await fetchFromRest("/gutenberg-api/v1/pages/7");
+    return data || null;
+  } catch (error) {
+    console.error("Error fetching home data:", error);
+    return null;
   }
 }
-`;
 
-export async function getHeroData(): Promise<HomeData | null> {
-  const data: any = await client.request(HOME_QUERY);
-  return data?.paginaDeInicios?.nodes?.[0]?.inicio || null;
+// Placeholder for other functions that were GraphQL-based
+// We should implement them as needed if other pages also shift to REST.
+
+export async function getAllPosts(): Promise<any[]> {
+  // TODO: Implement REST version if needed
+  return [];
+}
+
+export async function getAllPages(): Promise<any[]> {
+  // TODO: Implement REST version if needed
+  return [];
+}
+
+export async function getMenu(menuName: string): Promise<any[]> {
+  // TODO: Implement REST version if needed
+  return [];
+}
+
+export async function getFooterData(): Promise<any[]> {
+  return [];
 }

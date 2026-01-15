@@ -33,7 +33,7 @@ const services = [
 export default function ServicesGrid() {
     return (
         <section id="products" className=" bg-[#0E1015]">
-            <div className=" mx-auto ">
+            <div className="mx-auto   ">
                 <div className="text-center mb-16 pt-20">
                     <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4 tracking-wide uppercase">
                         Nuestros Productos y Servicios
@@ -44,7 +44,7 @@ export default function ServicesGrid() {
                     <div className="w-16 h-1 bg-primary mx-auto mt-6"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
                     {services.map((service, index) => (
                         <div
                             key={index}

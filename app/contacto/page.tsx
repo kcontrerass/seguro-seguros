@@ -32,16 +32,16 @@ export default function Contacto() {
             </section>
 
             {/* STRIP DE CONTACTO */}
-            <div className=" mx-auto relative z-20 pb-12 w-full -mt-20 mb-30 px-20">
+            <div className=" mx-auto relative z-20 pb-12 w-full -mt-20 mb-12 md:mb-32 px-6 md:px-20">
                 <div className="flex flex-col xl:flex-row items-end gap-8">
                     {/* Stylized Logo S */}
-                    <span className="text-[30px]  font-heading relative font-[400]  -top-10 text-primary">NUESTROS <br />
+                    <span className="text-xl md:text-[30px] font-heading relative font-[400] -top-10 text-primary">NUESTROS <br />
                         CANALES DIRECTOS</span>
 
                     {/* Features Bar */}
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-4 backdrop-blur-lg border border-white/20 rounded-2xl overflow-hidden shadow-2xl">
                         {/* Phone */}
-                        <div className="flex p-13 items-center gap-4 p-6 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-white/5 transition-colors">
+                        <div className="flex items-center gap-4 p-6 md:p-10 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-white/5 transition-colors">
 
                             <p className="text-[15px] font-medium text-white/90 leading-tight">
                                 <strong>Teléfono</strong>
@@ -101,7 +101,7 @@ export default function Contacto() {
                             <Input label="Tipo de seguro de interés *" placeholder="Seguro" />
                             <Textarea label="Mensaje" />
 
-                            <button className="border border-white text-white font-semibold py-3 px-14 rounded-full uppercase tracking-[0.3em] hover:bg-black hover:text-[#C5A065] transition-all">
+                            <button className="border border-white text-white font-semibold py-3 px-14 rounded-full uppercase tracking-[0.3em] hover:bg-black hover:text-[#C5A065] transition-all w-full md:w-auto">
                                 Enviar
                             </button>
 
@@ -118,25 +118,25 @@ export default function Contacto() {
                             <span className="text-white uppercase tracking-widest text-sm">
                                 Contáctanos
                             </span>
-                            <h2 className="text-[45px] font-heading font-bold text-primary mt-2">
+                            <h2 className="text-3xl md:text-[45px] font-heading font-bold text-primary mt-2">
                                 Horario de atención
                             </h2>
-                            <p className="text-gray-300 text-[25px]  mt-4">
+                            <p className="text-gray-300 text-lg md:text-[25px] mt-4">
                                 Queremos estar disponibles cuando más lo necesites.
                             </p>
                         </div>
 
                         <div className="pl-6 space-y-4">
                             <p className="text-white">
-                                <span className="text-primary font-bold text-[25px]">
-                                    Lunes a Viernes:  <span className="text-[25px] font-light text-white">
+                                <span className="text-primary font-bold text-lg md:text-[25px]">
+                                    Lunes a Viernes:  <span className="text-lg md:text-[25px] font-light text-white">
                                         9:00 am – 6:00 pm
                                     </span>
                                 </span>
 
                             </p>
 
-                            <p className="text-white text-[25px] flex items-center gap-3">
+                            <p className="text-white text-lg md:text-[25px] flex items-center gap-3">
 
                                 Atención personalizada con cita previa
                             </p>

@@ -21,14 +21,16 @@ const features = [
 
 export default function FeaturesStrip() {
     return (
-        <div className="relative -mt-24 z-20 container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 bg-[#1E2025]/95 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden shadow-2xl">
+        <div className="relative -mt-16 md:-mt-24 z-20 container mx-auto px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 bg-[#1E2025]/95 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-2xl">
                 {features.map((feature, index) => (
                     <div
                         key={index}
                         className={`
               flex items-center gap-4 p-6
-              ${index !== features.length - 1 ? "border-b md:border-b-0 md:border-r border-white/10" : ""}
+              ${index % 2 !== 0 ? "sm:border-r-0" : "sm:border-r"}
+              ${index < 2 ? "sm:border-b" : ""}
+              md:border-b-0 md:border-r last:border-0 border-white/10
               hover:bg-white/5 transition-colors duration-300 group
             `}
                     >

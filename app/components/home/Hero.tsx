@@ -5,7 +5,34 @@ import { ShieldCheck, BarChart3, Globe, Heart } from "lucide-react";
 
 export default async function Hero() {
     const data = await getHeroData();
-    console.log(data);
+
+    // Helper to find data in Gutenberg structure
+    const findBlockByType = (blocks: any[], type: string): any => {
+        for (const block of blocks) {
+            if (block.type === type) return block;
+            if (block.blocks) {
+                const found: any = findBlockByType(block.blocks, type);
+                if (found) return found;
+            }
+            if (block.columns) {
+                for (const col of block.columns) {
+                    const found: any = findBlockByType(col.blocks, type);
+                    if (found) return found;
+                }
+            }
+        }
+        return null;
+    };
+
+    const headingBlock = data ? findBlockByType(data.gutenberg_structure, "core/heading") : null;
+    const paragraphBlock = data ? findBlockByType(data.gutenberg_structure, "core/paragraph") : null;
+    const imageBlock = data ? findBlockByType(data.gutenberg_structure, "core/image") : null;
+    console.log(data?.gutenberg_structure[1].blocks[2].content);
+    const descriptionBanner = data?.gutenberg_structure[1].blocks[2].content;
+    const title = headingBlock?.content || "";
+    const description = paragraphBlock?.content || "Asesoría independiente y personalizada para personas, PYMES y empresas en Guatemala.";
+    const backgroundImage = imageBlock?.url || "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop";
+
     const features = [
         {
             icon: ShieldCheck,
@@ -30,7 +57,7 @@ export default async function Hero() {
             {/* Background Image Overlay */}
             <div
                 className="absolute inset-0 opacity-60 bg-cover bg-center"
-                style={{ backgroundImage: `url('${data?.bannerprincipal?.node?.sourceUrl || "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop"}')` }}
+                style={{ backgroundImage: `url('${backgroundImage}')` }}
                 aria-hidden="true"
             />
 
@@ -39,16 +66,16 @@ export default async function Hero() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
             {/* Main Content */}
-            <div className="container mx-auto px-30 relative z-10 pt-20 flex-grow flex flex-col justify-center">
+            <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-20 flex-grow flex flex-col justify-center">
                 <div className="max-w-4xl">
-                    <h1 className="text-5xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] mb-6 font-heading">
-                        {data?.tituloprincipal ? (
-                            <span
-                                className="block"
-                                dangerouslySetInnerHTML={{
-                                    __html: data.tituloprincipal,
-                                }}
-                            />
+                    <h1 className="text-5xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] w-[450px] mb-6 font-heading">
+                        {title ? (
+                            <div>
+                                <span className="block">{title}</span>
+                                <span className="block text-primary">
+                                    {data?.gutenberg_structure?.[1]?.blocks?.[1]?.content || "EN PROTECCIÓN PATRIMONIAL"}
+                                </span>
+                            </div>
                         ) : (
                             <>
                                 <span className="block">TU ALIADO ESTRATÉGICO</span>
@@ -62,9 +89,8 @@ export default async function Hero() {
                     {/* Gold Underline */}
                     <div className="w-24 h-1.5 bg-primary mb-8 rounded-full"></div>
 
-                    <p className="text-xl md:text-2xl text-white font-sans max-w-2xl leading-relaxed mb-10 drop-shadow-md">
-                        Asesoría independiente y personalizada para personas,
-                        PYMES y empresas en Guatemala.
+                    <p className="text-lg md:text-2xl text-white font-sans max-w-2xl leading-relaxed mb-10 drop-shadow-md">
+                        {descriptionBanner}
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-5">
@@ -85,19 +111,19 @@ export default async function Hero() {
             </div>
 
             {/* Bottom Features Strip & Logo */}
-            <div className="container mx-auto pl-30 relative z-20 pb-12 w-full">
-                <div className="flex flex-col md:flex-row items-end gap-8">
+            <div className="container mx-auto px-6 md:px-16 lg:pl-24 relative z-20 pb-12 w-full">
+                <div className="flex flex-col lg:flex-row items-end gap-8 mt-20 ">
                     {/* Stylized Logo S */}
-                    <Image src="/logohome.svg" className="w-20 h-20 mr-30" alt="Logo" width={60} height={60} />
+                    <Image src="/logohome.svg" className="w-16 h-16 md:w-20 hidden lg:block  md:h-20 lg:mr-12" alt="Logo" width={60} height={60} />
 
                     {/* Features Bar */}
-                    <div className="flex-1 grid grid-cols-1 md:grid-cols-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden">
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden w-full">
                         {features.map((feature, index) => (
                             <div
                                 key={index}
                                 className={`
                         flex items-center gap-4 p-6
-                        ${index !== features.length - 1 ? "border-b md:border-b-0 md:border-r border-white/20" : ""}
+                        border-b lg:border-b-0 lg:border-r border-white/20 last:border-0
                         group hover:bg-white/5 transition-colors
                         `}
                             >

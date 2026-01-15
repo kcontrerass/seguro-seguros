@@ -83,7 +83,7 @@ export default function Blog() {
                             </div>
 
                             {/* Coaseguro */}
-                            <div className="mt-42">
+                            <div className="mt-16 md:mt-42">
                                 <h3 className="text-3xl font-heading font-bold text-white mb-4 text-center">Coaseguro</h3>
                                 <p className="text-gray-300 text-lg mb-6 leading-relaxed">
                                     El coaseguro es el porcentaje del gasto que compartes con la aseguradora después del deducible.
@@ -102,10 +102,10 @@ export default function Blog() {
 
                     {/* Footer Text */}
                     <div className="mt-32 text-left  mx-auto">
-                        <h2 className="text-[35px] md:text-3xl font-bold text-white ¿">
+                        <h2 className="text-2xl md:text-4xl font-bold text-white mb-6">
                             En SESE Corredores de Seguros no solo vendemos pólizas.
                         </h2>
-                        <p className="text-[35px] text-white text-balance">
+                        <p className="text-lg md:text-2xl text-white text-balance font-light leading-relaxed">
                             Te acompañamos antes, durante y después, con asesoría profesional, objetiva y cercana.
                             Si después de leer tienes dudas o quieres revisar tu cobertura actual, nuestros asesores están listos para ayudarte.
                         </p>

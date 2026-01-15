@@ -31,9 +31,9 @@ export default function Partners() {
                                 <Image
                                     src={partner.src}
                                     alt={partner.alt}
-                                    width={80}
-                                    height={80}
-                                    className="object-contain grayscale hover:grayscale-0 transition mr-20 duration-300 h-16 w-auto"
+                                    width={60}
+                                    height={60}
+                                    className="object-contain grayscale hover:grayscale-0 transition mr-10 duration-300  w-auto"
                                 />
                             </div>
                         ))}
