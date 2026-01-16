@@ -1,51 +1,51 @@
 import Link from "next/link";
 import Image from "next/image";
-import { link } from "fs";
 
-const services = [
-    {
-        title: "Seguros de Vida y Salud",
-        description: "Vida, gastos médicos, accidentes personales.",
-        image: "https://images.unsplash.com/photo-1543269664-56d93c1b41a6?q=80&w=2670&auto=format&fit=crop",
-        link: "productos/vida-y-salud"
-    },
-    {
-        title: "Seguros Patrimoniales",
-        description: "Vehículos, motocicletas, incendio, transporte, responsabilidad civil.",
-        image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2573&auto=format&fit=crop",
-        link: "productos/patrimoniales",
-        colSpan: true, // Make this one wider if we want grid variety, or keep standard
-    },
-    {
-        title: "Seguros Diversos",
-        description: "Fianzas, aviación, embarcaciones, maquinaria, etc.",
-        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2670&auto=format&fit=crop",
-        link: "productos/diversos",
-    },
-    {
-        title: "Seguros Especializados",
-        description: "Seguros masivos y saldos deudores, microseguros, desempleo, agropecuario.",
-        image: "https://images.unsplash.com/photo-1543269664-56d93c1b41a6?q=80&w=2670&auto=format&fit=crop",
-        link: "productos/especializados",
-    },
-];
+export default function ServicesGrid({ data }: { data: any }) {
+    const mainBlocks = data?.blocks || [];
 
-export default function ServicesGrid() {
+    // Extract title and description
+    const titleBlock = mainBlocks.find((b: any) => b.type === "core/heading");
+    const descriptionBlock = mainBlocks.find((b: any) => b.type === "core/paragraph");
+
+    const title = titleBlock?.content || "Nuestros Productos y Servicios";
+    const description = descriptionBlock?.content || "Protección para cada necesidad, con asesoría experta.";
+
+    // Extract columns for services
+    const columnsBlock = mainBlocks.find((b: any) => b.type === "core/columns");
+    const columns = columnsBlock?.columns || [];
+
+    const services = columns.map((col: any) => {
+        const imgBlock = col.blocks?.find((b: any) => b.type === "core/image");
+        const groupBlock = col.blocks?.find((b: any) => b.type === "core/group");
+        const headingBlock = groupBlock?.blocks?.find((b: any) => b.type === "core/heading");
+        const paragraphBlock = groupBlock?.blocks?.find((b: any) => b.type === "core/paragraph");
+        const buttonsBlock = groupBlock?.blocks?.find((b: any) => b.type === "core/buttons");
+        const button = buttonsBlock?.buttons?.[0];
+
+        return {
+            title: headingBlock?.content || "",
+            description: paragraphBlock?.content || "",
+            image: imgBlock?.url || "https://images.unsplash.com/photo-1543269664-56d93c1b41a6?q=80&w=2670&auto=format&fit=crop",
+            link: button?.url || "#"
+        };
+    });
+
     return (
-        <section id="products" className=" bg-[#0E1015]">
+        <section id="productos" className=" bg-[#0E1015]">
             <div className="mx-auto   ">
-                <div className="text-center mb-16 pt-20">
+                <div className="text-center mb-16 pt-20 px-6">
                     <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4 tracking-wide uppercase">
-                        Nuestros Productos y Servicios
+                        {title}
                     </h2>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-                        Protección para cada necesidad, con asesoría experta.
+                        {description}
                     </p>
                     <div className="w-16 h-1 bg-primary mx-auto mt-6"></div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
-                    {services.map((service, index) => (
+                    {services.map((service: any, index: number) => (
                         <div
                             key={index}
                             className="group relative h-[400px] overflow-hidden rounded-sm cursor-pointer"

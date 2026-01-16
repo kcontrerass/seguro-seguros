@@ -1,17 +1,13 @@
 import Link from "next/link";
-import { getHeroData } from "@/lib/wordpress";
 import Image from "next/image";
 import { ShieldCheck, BarChart3, Globe, Heart } from "lucide-react";
 
-export default async function Hero() {
-    const data = await getHeroData();
-
-    // The new structure has a main group as the first element
-    const mainGroup = data?.gutenberg_structure?.[0];
-    const mainBlocks = mainGroup?.blocks || [];
+export default function Hero({ data }: { data: any }) {
+    // The section itself is the data passed from parent
+    const mainBlocks = data?.blocks || [];
 
     // Extract background image from group attributes
-    const backgroundImage = mainGroup?.attributes?.style?.background?.backgroundImage?.url ||
+    const backgroundImage = data?.attributes?.style?.background?.backgroundImage?.url ||
         "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2664&auto=format&fit=crop";
 
     // Extract heading and paragraph
@@ -67,9 +63,9 @@ export default async function Hero() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
             {/* Main Content */}
-            <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-50 flex-grow  flex flex-col justify-center">
+            <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-40 md:pt-50 flex-grow  flex flex-col justify-center min-h-[600px] md:min-h-[80vh]">
                 <div className="max-w-4xl">
-                    <h1 className="text-3xl md:text-2xl lg:text-4xl font-bold text-white leading-[1.1] w-[450px] mb-6 font-heading">
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] md:w-[650px] mb-6 font-heading">
                         {title}
                     </h1>
 
@@ -89,8 +85,8 @@ export default async function Hero() {
                                     target={btn.linkTarget}
                                     rel={btn.rel}
                                     className={`px-8 py-4 ${idx === 0
-                                            ? "bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black"
-                                            : "bg-primary border border-primary text-black font-bold hover:bg-primary/90 shadow-primary/20"
+                                        ? "bg-primary border border-primary text-black font-bold hover:bg-primary/90 shadow-primary/20"
+                                        : "bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black"
                                         } transition-all duration-300 text-center rounded-lg shadow-lg`}
                                 >
                                     {btn.text}
@@ -99,14 +95,14 @@ export default async function Hero() {
                         ) : (
                             <>
                                 <Link
-                                    href="#contact"
-                                    className="px-8 py-4 bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black transition-all duration-300 text-center rounded-lg shadow-lg"
+                                    href="/contacto"
+                                    className="px-8 py-4 bg-primary border border-primary text-black font-bold hover:bg-primary/90 transition-all duration-300 text-center rounded-lg shadow-lg shadow-primary/20"
                                 >
                                     Solicita tu cotización
                                 </Link>
                                 <Link
-                                    href="#products"
-                                    className="px-8 py-4 bg-primary border border-primary text-black font-bold hover:bg-primary/90 transition-all duration-300 text-center rounded-lg shadow-lg shadow-primary/20"
+                                    href="#productos"
+                                    className="px-8 py-4 bg-black/40 backdrop-blur-sm border border-white/30 text-white font-medium hover:bg-white hover:text-black transition-all duration-300 text-center rounded-lg shadow-lg"
                                 >
                                     Conoce nuestros productos
                                 </Link>

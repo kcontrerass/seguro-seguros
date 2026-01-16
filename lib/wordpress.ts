@@ -31,7 +31,7 @@ async function fetchFromRest(endpoint: string) {
 /**
  * Fetches the home page data (ID 7) from the custom Gutenberg API.
  */
-export async function getHeroData(): Promise<HomeData | null> {
+export async function getHomeData(): Promise<HomeData | null> {
   try {
     const data = await fetchFromRest("/gutenberg-api/v1/pages/inicio");
     return data || null;

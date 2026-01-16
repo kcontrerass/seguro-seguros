@@ -4,21 +4,28 @@ import Image from "next/image"
 import useEmblaCarousel from "embla-carousel-react"
 import AutoScroll from "embla-carousel-auto-scroll"
 
-const partners = [
-    { src: "/ficosa.svg", alt: "Aseguradora General" },
-    { src: "/elroble.svg", alt: "Privanza" },
-    { src: "/mapfre.svg", alt: "El Roble" },
-    { src: "/assa1.png", alt: "Universales" },
-    { src: "/panamerican1.svg", alt: "Pan American Life" },
-    { src: "/uni.svg", alt: "ASSA" },
-    { src: "/capa.svg", alt: "BAM" },
-]
-
-export default function Partners() {
+export default function Partners({ data }: { data?: any }) {
     const [emblaRef] = useEmblaCarousel(
         { loop: true, dragFree: true },
         [AutoScroll({ speed: 1, stopOnInteraction: false })]
     )
+
+    const mainBlocks = data?.blocks || [];
+
+    // Extract images from the first group/block that has images
+    const imagesGroup = mainBlocks.find((b: any) => b.type === "core/group" && b.blocks?.some((sb: any) => sb.type === "core/image"));
+    const imageBlocks = imagesGroup?.blocks?.filter((sb: any) => sb.type === "core/image") || [];
+
+    const partners = imageBlocks.map((img: any) => ({
+        src: img.url,
+        alt: img.alt || "Aseguradora"
+    }));
+
+    // Extract heading
+    const headingBlock = mainBlocks.find((b: any) => b.type === "core/heading");
+    const headingText = headingBlock?.content || "Trabajamos con las aseguradoras más sólidas de Guatemala e internacionales";
+
+    if (partners.length === 0) return null;
 
     return (
         <section className="bg-primary py-16 overflow-hidden">
@@ -31,9 +38,9 @@ export default function Partners() {
                                 <Image
                                     src={partner.src}
                                     alt={partner.alt}
-                                    width={60}
-                                    height={60}
-                                    className="object-contain grayscale hover:grayscale-0 transition mr-10 duration-300  w-auto"
+                                    width={160}
+                                    height={160}
+                                    className="object-contain grayscale brightness-0 hover:grayscale-0 hover:brightness-100 transition mr-10 duration-300 h-10 md:h-12 w-auto"
                                 />
                             </div>
                         ))}
@@ -41,10 +48,9 @@ export default function Partners() {
                 </div>
 
                 {/* Text */}
-                <div className="text-center mt-16">
-                    <h3 className="text-white/90 font-heading tracking-widest text-lg md:text-xl uppercase">
-                        Trabajamos con las aseguradoras más sólidas <br className="hidden md:block" />
-                        de Guatemala e Internacionales
+                <div className="text-center mt-16 px-6">
+                    <h3 className="text-white/90 font-heading tracking-widest text-lg md:text-xl uppercase max-w-4xl mx-auto">
+                        {headingText}
                     </h3>
                 </div>
             </div>
