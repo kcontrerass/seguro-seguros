@@ -4,35 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 
+import { MenuItem } from "@/lib/wordpress";
+
 interface ProductsMenuProps {
     isOpen: boolean;
     onClose: () => void;
+    items?: MenuItem[];
 }
 
-export const products = [
-    {
-        title: "Seguros de Vida y Salud",
-        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=600",
-        href: "/productos/vida-y-salud"
-    },
-    {
-        title: "Seguros Patrimoniales",
-        image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=600",
-        href: "/productos/patrimoniales"
-    },
-    {
-        title: "Seguros Diversos",
-        image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600",
-        href: "/productos/diversos"
-    },
-    {
-        title: "Seguros Especializados",
-        image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=600",
-        href: "/productos/especializados"
-    }
-];
-
-export default function ProductsMenu({ isOpen, onClose }: ProductsMenuProps) {
+export default function ProductsMenu({ isOpen, onClose, items = [] }: ProductsMenuProps) {
     if (!isOpen) return null;
 
     return (
@@ -50,17 +30,17 @@ export default function ProductsMenu({ isOpen, onClose }: ProductsMenuProps) {
 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                    {products.map((product) => (
+                    {items.map((item) => (
                         <Link
-                            key={product.title}
-                            href={product.href}
+                            key={item.id}
+                            href={item.url}
                             className="group relative h-64 md:h-80 w-full overflow-hidden rounded-xl block"
                             onClick={onClose}
                         >
                             {/* Background Image */}
                             <Image
-                                src={product.image}
-                                alt={product.title}
+                                src={item.featured_image?.url || "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=600"}
+                                alt={item.featured_image?.alt || item.title}
                                 fill
                                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                             />
@@ -71,7 +51,7 @@ export default function ProductsMenu({ isOpen, onClose }: ProductsMenuProps) {
                             {/* Text Content */}
                             <div className="absolute bottom-0 left-0 w-full p-6 text-center">
                                 <h3 className="text-white font-heading font-bold text-lg md:text-xl leading-tight">
-                                    {product.title}
+                                    {item.title}
                                 </h3>
                             </div>
                         </Link>

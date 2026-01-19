@@ -19,20 +19,24 @@ export const metadata: Metadata = {
 
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import { getHeaderData, getFooterData } from "@/lib/wordpress";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headerData = await getHeaderData();
+  const footerData = await getFooterData();
+
   return (
     <html lang="es">
       <body
         className={`${montserrat.variable} ${inter.variable} antialiased`}
       >
-        <Header />
+        <Header data={headerData} />
         {children}
-        <Footer />
+        <Footer data={footerData} />
       </body>
     </html>
   );

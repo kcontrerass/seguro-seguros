@@ -4,9 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Facebook, Instagram, ChevronDown } from "lucide-react";
-import ProductsMenu, { products } from "./ProductsMenu";
+import ProductsMenu from "./ProductsMenu";
+import { HeaderData, MenuItem } from "@/lib/wordpress";
 
-export default function Header() {
+interface HeaderProps {
+    data: HeaderData | null;
+}
+
+export default function Header({ data }: HeaderProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
@@ -20,13 +25,35 @@ export default function Header() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const navLinks = [
+    const defaultLinks = [
         { name: "HOME", href: "/" },
         { name: "QUIÉNES SOMOS", href: "/quienes-somos" },
         { name: "PRODUCTOS", href: "#products" },
         { name: "BLOG", href: "/blog" },
         { name: "CONTACTO", href: "/contacto" },
     ];
+
+    const apiItems = data?.menu.items || [];
+
+    // Find the products item and its children
+    const productsItem = apiItems.find(item =>
+        item.title.toUpperCase() === "PRODUCTOS" ||
+        item.slug === "productos" ||
+        item.url.includes("productos")
+    );
+    const productSubItems = productsItem?.children || [];
+
+    const navLinks = apiItems.length > 0
+        ? apiItems.map(item => ({
+            name: item.title.toUpperCase(),
+            href: item.url,
+            hasChildren: item.children.length > 0
+        }))
+        : defaultLinks.map(link => ({ ...link, hasChildren: false }));
+
+    const logoUrl = data?.logo.url || "/segurologo.svg";
+    const logoAlt = data?.logo.alt || "Seguro Seguros Logo";
+    const socialNetworks = data?.social_networks.networks || [];
 
     return (
         <header
@@ -37,8 +64,8 @@ export default function Header() {
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3">
                     <Image
-                        src="/segurologo.svg"
-                        alt="Seguro Seguros Logo"
+                        src={logoUrl}
+                        alt={logoAlt}
                         width={120}
                         height={120}
                         className="w-32 md:w-48 lg:w-60 h-auto"
@@ -49,7 +76,7 @@ export default function Header() {
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
-                        link.name === "PRODUCTOS" ? (
+                        link.name === "PRODUCTOS" || link.hasChildren ? (
                             <button
                                 key={link.name}
                                 onClick={() => setIsProductsMenuOpen(!isProductsMenuOpen)}
@@ -73,12 +100,29 @@ export default function Header() {
                 {/* Socials & Mobile Toggle */}
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex gap-4 border-l border-white/20 pl-4">
-                        <a href="#" className="text-white hover:text-primary transition-colors">
-                            <Facebook size={20} />
-                        </a>
-                        <a href="#" className="text-white hover:text-primary transition-colors">
-                            <Instagram size={20} />
-                        </a>
+                        {socialNetworks.map((social) => (
+                            <a
+                                key={social.platform}
+                                href={social.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-primary transition-colors"
+                                title={social.image_alt}
+                            >
+                                {social.image ? (
+                                    <Image
+                                        src={social.image}
+                                        alt={social.image_alt}
+                                        width={20}
+                                        height={20}
+                                        className="w-5 h-5 filter brightness-0 invert"
+                                    />
+                                ) : (
+                                    social.platform.toLowerCase() === "facebook" ? <Facebook size={20} /> :
+                                        social.platform.toLowerCase() === "instagram" ? <Instagram size={20} /> : null
+                                )}
+                            </a>
+                        ))}
                     </div>
 
                     <button
@@ -94,13 +138,14 @@ export default function Header() {
             <ProductsMenu
                 isOpen={isProductsMenuOpen}
                 onClose={() => setIsProductsMenuOpen(false)}
+                items={productSubItems}
             />
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
                 <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-t border-white/10 py-6 px-6 flex flex-col gap-6 h-screen overflow-y-auto pb-20">
                     {navLinks.map((link) => (
-                        link.name === "PRODUCTOS" ? (
+                        link.name === "PRODUCTOS" || link.hasChildren ? (
                             <div key={link.name} className="flex flex-col gap-4">
                                 <button
                                     onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
@@ -112,14 +157,14 @@ export default function Header() {
 
                                 {isMobileProductsOpen && (
                                     <div className="flex flex-col gap-4 pl-4 border-l border-white/10 ml-2">
-                                        {products.map((product) => (
+                                        {productSubItems.map((subItem) => (
                                             <Link
-                                                key={product.title}
-                                                href={product.href}
+                                                key={subItem.id}
+                                                href={subItem.url}
                                                 className="text-[15px] font-medium text-white/70 hover:text-primary"
                                                 onClick={() => setIsMobileMenuOpen(false)}
                                             >
-                                                {product.title}
+                                                {subItem.title}
                                             </Link>
                                         ))}
                                     </div>
@@ -137,12 +182,29 @@ export default function Header() {
                         )
                     ))}
                     <div className="flex gap-6 mt-4">
-                        <a href="#" className="text-white hover:text-primary">
-                            <Facebook size={24} />
-                        </a>
-                        <a href="#" className="text-white hover:text-primary">
-                            <Instagram size={24} />
-                        </a>
+                        {socialNetworks.map((social) => (
+                            <a
+                                key={social.platform}
+                                href={social.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-primary"
+                                title={social.image_alt}
+                            >
+                                {social.image ? (
+                                    <Image
+                                        src={social.image}
+                                        alt={social.image_alt}
+                                        width={24}
+                                        height={24}
+                                        className="w-6 h-6 filter brightness-0 invert"
+                                    />
+                                ) : (
+                                    social.platform.toLowerCase() === "facebook" ? <Facebook size={24} /> :
+                                        social.platform.toLowerCase() === "instagram" ? <Instagram size={24} /> : null
+                                )}
+                            </a>
+                        ))}
                     </div>
                 </div>
             )}
