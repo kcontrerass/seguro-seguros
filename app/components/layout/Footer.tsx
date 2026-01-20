@@ -11,8 +11,8 @@ export default function Footer({ data }: FooterProps) {
     const logoUrl = data?.logo.url || "/logo.svg";
     const logoAlt = data?.logo.alt || "Seguro Seguros Logo";
 
-    const siteName = data?.site_info.name || "SESE Corredores de Seguros";
-    const siteDescription = data?.site_info.description || "Registro CS-218<br>Supervisado por la Superintendencia de Bancos de Guatemala";
+    const siteName = data?.site_info.name || "SESE Corredores de Segurossss";
+    const siteDescription = data?.site_info.description || "Registro CS-218<br>Supervisado por la Superintendencia de Bancos de Guatemalaaaa";
 
     const copyrightText = data?.copyright.text || `© ${new Date().getFullYear()} Todos los derechos reservados a Seguros Seguros.`;
 

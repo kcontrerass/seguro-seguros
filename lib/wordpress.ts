@@ -85,6 +85,74 @@ export interface FooterData {
   } | null;
 }
 
+// --- Helpers ---
+
+const PRODUCT_SLUGS = ["vida-y-salud", "diversos", "especializados", "patrimoniales"];
+
+/**
+ * Fixes a URL to include the /productos/ prefix if it refers to a product page.
+ */
+function fixUrl(url: string, slug?: string): string {
+  if (!url) return url;
+
+  // If we have a known product slug
+  if (slug && PRODUCT_SLUGS.includes(slug)) {
+    if (!url.startsWith("/productos/")) {
+      // If it's a relative URL from WP (like /vida-y-salud/) or absolute from same domain
+      const parsedUrl = url.replace("https://segurosegurosbe.aumenta.do", "");
+      if (parsedUrl.startsWith("/") && parsedUrl.includes(slug)) {
+        return `/productos/${slug}`;
+      }
+    }
+  }
+
+  // Fallback check: if the URL itself contains one of the product slugs and doesn't have /productos/
+  for (const productSlug of PRODUCT_SLUGS) {
+    if (url.includes(`/${productSlug}`) && !url.includes(`/productos/${productSlug}`)) {
+      // Check if it's an internal-ish link
+      if (url.startsWith("/") || url.includes("segurosegurosbe.aumenta.do")) {
+        return `/productos/${productSlug}`;
+      }
+    }
+  }
+
+  return url;
+}
+
+/**
+ * Recursively fixes URLs in menu items.
+ */
+function fixMenuItems(items: MenuItem[]): MenuItem[] {
+  return items.map(item => ({
+    ...item,
+    url: fixUrl(item.url, item.slug),
+    children: item.children ? fixMenuItems(item.children) : []
+  }));
+}
+
+/**
+ * Recursively fixes URLs in Gutenberg structure (useful for buttons/links in blocks).
+ */
+function fixGutenbergLinks(obj: any): any {
+  if (!obj || typeof obj !== "object") return obj;
+
+  if (Array.isArray(obj)) {
+    return obj.map(fixGutenbergLinks);
+  }
+
+  const newObj = { ...obj };
+
+  for (const key in newObj) {
+    if (key === "url" && typeof newObj[key] === "string") {
+      newObj[key] = fixUrl(newObj[key]);
+    } else {
+      newObj[key] = fixGutenbergLinks(newObj[key]);
+    }
+  }
+
+  return newObj;
+}
+
 // --- Fetch Functions ---
 
 async function fetchFromRest(endpoint: string) {
@@ -100,16 +168,26 @@ async function fetchFromRest(endpoint: string) {
 }
 
 /**
+ * Generic function to fetch page data by slug.
+ */
+export async function getPageData(slug: string): Promise<PageData | null> {
+  try {
+    const data = await fetchFromRest(`/gutenberg-api/v1/pages/${slug}`);
+    if (data && data.gutenberg_structure) {
+      data.gutenberg_structure = fixGutenbergLinks(data.gutenberg_structure);
+    }
+    return data || null;
+  } catch (error) {
+    console.error(`Error fetching page data for slug: ${slug}`, error);
+    return null;
+  }
+}
+
+/**
  * Fetches the home page data (ID 7) from the custom Gutenberg API.
  */
 export async function getHomeData(): Promise<HomeData | null> {
-  try {
-    const data = await fetchFromRest("/gutenberg-api/v1/pages/inicio");
-    return data || null;
-  } catch (error) {
-    console.error("Error fetching home data:", error);
-    return null;
-  }
+  return (await getPageData("inicio")) as HomeData | null;
 }
 
 /**
@@ -118,6 +196,9 @@ export async function getHomeData(): Promise<HomeData | null> {
 export async function getHeaderData(): Promise<HeaderData | null> {
   try {
     const data = await fetchFromRest("/gutenberg-api/v1/header");
+    if (data && data.menu && data.menu.items) {
+      data.menu.items = fixMenuItems(data.menu.items);
+    }
     return data || null;
   } catch (error) {
     console.error("Error fetching header data:", error);
@@ -131,6 +212,9 @@ export async function getHeaderData(): Promise<HeaderData | null> {
 export async function getFooterData(): Promise<FooterData | null> {
   try {
     const data = await fetchFromRest("/gutenberg-api/v1/footer");
+    if (data && data.menu && data.menu.items) {
+      data.menu.items = fixMenuItems(data.menu.items);
+    }
     return data || null;
   } catch (error) {
     console.error("Error fetching footer data:", error);
@@ -142,11 +226,5 @@ export async function getFooterData(): Promise<FooterData | null> {
  * Fetches the "Quienes Somos" page data from the custom Gutenberg API.
  */
 export async function getAboutData(): Promise<PageData | null> {
-  try {
-    const data = await fetchFromRest("/gutenberg-api/v1/pages/quienes-somos");
-    return data || null;
-  } catch (error) {
-    console.error("Error fetching about data:", error);
-    return null;
-  }
+  return getPageData("quienes-somos");
 }
