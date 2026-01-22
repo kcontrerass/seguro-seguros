@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { getHeaderData, getFooterData } from "@/lib/wordpress";
+import { MenuProvider } from "./context/MenuContext";
 
 export default async function RootLayout({
   children,
@@ -34,9 +35,11 @@ export default async function RootLayout({
       <body
         className={`${montserrat.variable} ${inter.variable} antialiased`}
       >
-        <Header data={headerData} />
-        {children}
-        <Footer data={footerData} />
+        <MenuProvider>
+          <Header data={headerData} />
+          {children}
+          <Footer data={footerData} />
+        </MenuProvider>
       </body>
     </html>
   );

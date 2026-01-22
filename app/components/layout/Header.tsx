@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Facebook, Instagram, ChevronDown } from "lucide-react";
 import ProductsMenu from "./ProductsMenu";
 import { HeaderData, MenuItem } from "@/lib/wordpress";
+import { useMenu } from "../../context/MenuContext";
 
 interface HeaderProps {
     data: HeaderData | null;
@@ -14,8 +16,9 @@ interface HeaderProps {
 export default function Header({ data }: HeaderProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
+    const { isProductsMenuOpen, toggleProductsMenu, closeProductsMenu } = useMenu();
     const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -55,6 +58,21 @@ export default function Header({ data }: HeaderProps) {
     const logoAlt = data?.logo.alt || "Seguro Seguros Logo";
     const socialNetworks = data?.social_networks.networks || [];
 
+    const isLinkActive = (href: string, name?: string) => {
+        if (!href) return false;
+
+        // Products logic: active if it's the products menu or if we're in a /productos/ path
+        if (name === "PRODUCTOS" || href.includes("productos") || href === "#products") {
+            return pathname.startsWith("/productos");
+        }
+
+        // Normalize for comparison
+        const normPath = pathname.replace(/\/$/, "") || "/";
+        const normHref = href.replace("https://segurosegurosbe.aumenta.do", "").replace(/\/$/, "") || "/";
+
+        return normPath === normHref;
+    };
+
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-black/80 backdrop-blur-md py-4" : "bg-transparent py-6"
@@ -79,8 +97,8 @@ export default function Header({ data }: HeaderProps) {
                         link.name === "PRODUCTOS" || link.hasChildren ? (
                             <button
                                 key={link.name}
-                                onClick={() => setIsProductsMenuOpen(!isProductsMenuOpen)}
-                                className={`text-sm font-medium transition-colors tracking-wide ${isProductsMenuOpen ? "text-primary" : "text-white/90 hover:text-primary"
+                                onClick={toggleProductsMenu}
+                                className={`text-sm font-medium transition-colors tracking-wide ${isProductsMenuOpen || isLinkActive(link.href, link.name) ? "text-gold-gradient" : "text-white/90 hover:text-primary"
                                     }`}
                             >
                                 {link.name}
@@ -89,7 +107,8 @@ export default function Header({ data }: HeaderProps) {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-sm font-medium text-white/90 hover:text-primary transition-colors tracking-wide"
+                                className={`text-sm font-medium transition-colors tracking-wide ${isLinkActive(link.href) ? "text-gold-gradient" : "text-white/90 hover:text-primary"
+                                    }`}
                             >
                                 {link.name}
                             </Link>
@@ -137,7 +156,7 @@ export default function Header({ data }: HeaderProps) {
             {/* Products Mega Menu */}
             <ProductsMenu
                 isOpen={isProductsMenuOpen}
-                onClose={() => setIsProductsMenuOpen(false)}
+                onClose={closeProductsMenu}
                 items={productSubItems}
             />
 
@@ -149,7 +168,7 @@ export default function Header({ data }: HeaderProps) {
                             <div key={link.name} className="flex flex-col gap-4">
                                 <button
                                     onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                                    className="text-lg font-medium text-white hover:text-primary flex items-center justify-between"
+                                    className={`text-lg font-medium hover:text-primary flex items-center justify-between ${isLinkActive(link.href, link.name) ? "text-gold-gradient" : "text-white"}`}
                                 >
                                     {link.name}
                                     <ChevronDown className={`w-5 h-5 transition-transform ${isMobileProductsOpen ? "rotate-180" : ""}`} />
@@ -174,7 +193,7 @@ export default function Header({ data }: HeaderProps) {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-lg font-medium text-white hover:text-primary"
+                                className={`text-lg font-medium hover:text-primary ${isLinkActive(link.href) ? "text-gold-gradient" : "text-white"}`}
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 {link.name}

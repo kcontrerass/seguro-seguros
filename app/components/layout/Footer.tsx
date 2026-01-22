@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { FooterData } from "@/lib/wordpress";
+import { useMenu } from "../../context/MenuContext";
 
 interface FooterProps {
     data: FooterData | null;
@@ -108,16 +111,33 @@ export default function Footer({ data }: FooterProps) {
                 <div className="md:pl-20 pt-4">
                     <h4 className="text-white font-semibold mb-6 uppercase tracking-wider text-xs">Navegación</h4>
                     <ul className="space-y-4">
-                        {finalNavLinks.map((link, index) => (
-                            <li key={index}>
-                                <Link
-                                    href={link.url}
-                                    className="text-gray-400 hover:text-primary transition-colors text-sm"
-                                >
-                                    {link.title}
-                                </Link>
-                            </li>
-                        ))}
+                        {finalNavLinks.map((link, index) => {
+                            const linkTitle = (link as any).title || (link as any).name || "";
+                            const linkUrl = (link as any).url || (link as any).href || "#";
+                            const isProducts = typeof linkTitle === 'string' && linkTitle.toLowerCase().includes("producto");
+
+                            const { toggleProductsMenu } = useMenu();
+
+                            return (
+                                <li key={index}>
+                                    {isProducts ? (
+                                        <button
+                                            onClick={toggleProductsMenu}
+                                            className="text-gray-400 hover:text-primary transition-colors text-sm text-left w-full"
+                                        >
+                                            {linkTitle}
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href={linkUrl}
+                                            className="text-gray-400 hover:text-primary transition-colors text-sm"
+                                        >
+                                            {linkTitle}
+                                        </Link>
+                                    )}
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
 
