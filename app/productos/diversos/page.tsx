@@ -53,7 +53,7 @@ export default async function Diversos() {
                         className="text-4xl md:text-7xl font-heading font-bold text-white mb-6 uppercase tracking-wider"
                         dangerouslySetInnerHTML={{ __html: heroTitle }}
                     />
-                    <div className="w-20 h-1 bg-[#C5A065] mx-auto mb-6" />
+                    <div className="w-20 h-1 bg-gold-gradient mx-auto mb-6" />
                     <p
                         className="text-lg md:text-2xl text-gray-200 max-w-4xl mx-auto font-light leading-relaxed drop-shadow-lg"
                         dangerouslySetInnerHTML={{ __html: heroDesc }}
@@ -65,7 +65,7 @@ export default async function Diversos() {
             <section className="container mx-auto px-6 py-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                     {dynamicProducts.map((product: any, index: number) => (
-                        <div key={index} className="bg-[#1E1E1E] rounded-2xl overflow-hidden shadow-2xl hover:shadow-[#C5A065]/20 transition-all duration-500 group border border-white/5 flex flex-col h-full">
+                        <div key={index} className="bg-[#1E1E1E] rounded-2xl overflow-hidden shadow-2xl hover:shadow-primary/20 transition-all duration-500 group border border-white/5 flex flex-col h-full">
                             {/* Image Container */}
                             <div className="relative h-72 w-full overflow-hidden">
                                 <Image
@@ -80,7 +80,7 @@ export default async function Diversos() {
                             {/* Content */}
                             <div className="p-10 flex-grow">
                                 <h3
-                                    className="text-[#C5A065] font-bold text-2xl mb-6 font-heading leading-tight"
+                                    className="text-gold-gradient font-bold text-2xl mb-6 font-heading leading-tight"
                                     dangerouslySetInnerHTML={{ __html: product.title }}
                                 />
                                 <p
@@ -91,7 +91,7 @@ export default async function Diversos() {
                                     <ul className="space-y-3">
                                         {product.list.map((item: string, i: number) => (
                                             <li key={i} className="flex items-start text-gray-400 text-sm font-light">
-                                                <span className="text-[#C5A065] mr-2 mt-1.5 h-1.5 w-1.5 rounded-full bg-[#C5A065] flex-shrink-0" />
+                                                <span className="text-gold-gradient mr-2 mt-1.5 h-1.5 w-1.5 rounded-full bg-gold-gradient flex-shrink-0" />
                                                 <span dangerouslySetInnerHTML={{ __html: item }} />
                                             </li>
                                         ))}

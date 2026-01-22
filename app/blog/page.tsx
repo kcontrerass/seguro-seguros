@@ -36,9 +36,9 @@ export default async function Blog() {
                     <div>
                         <h1 className="text-4xl md:text-[55px] font-heading font-bold mb-6 leading-tight uppercase">
                             <span dangerouslySetInnerHTML={{ __html: heroTitle1 }} /> <br />
-                            <span className="text-[#C5A065]" dangerouslySetInnerHTML={{ __html: heroTitle2 }} />
+                            <span className="text-gold-gradient" dangerouslySetInnerHTML={{ __html: heroTitle2 }} />
                         </h1>
-                        <div className="w-20 h-1 bg-[#C5A065] mb-8" />
+                        <div className="w-20 h-1 bg-gold-gradient mb-8" />
                         <p
                             className="text-xl md:text-2xl text-gray-200 font-light leading-relaxed max-w-3xl"
                             dangerouslySetInnerHTML={{ __html: heroDesc }}

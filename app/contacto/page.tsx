@@ -98,7 +98,7 @@ export default async function Contacto() {
                         className="text-5xl md:text-[55px] font-heading font-bold text-white uppercase tracking-widest mb-4"
                         dangerouslySetInnerHTML={{ __html: heroTitle }}
                     />
-                    <div className="w-20 h-[3px] bg-[#C5A065] mx-auto mb-6" />
+                    <div className="w-20 h-[3px] bg-gold-gradient mx-auto mb-6" />
                     <p
                         className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-40"
                         dangerouslySetInnerHTML={{ __html: heroDesc }}
@@ -110,7 +110,7 @@ export default async function Contacto() {
             <div className="mx-auto relative z-20 pb-12 w-full -mt-20 mb-12 md:mb-32 px-6 md:px-20">
                 <div className="flex flex-col xl:flex-row md:items-end items-center gap-8">
                     <span
-                        className="text-xl md:text-[30px] font-heading relative font-[400]  -top-10 text-primary uppercase"
+                        className="text-xl md:text-[30px] font-heading relative font-[400]  -top-10 text-gold-gradient uppercase"
                         dangerouslySetInnerHTML={{ __html: channelsTitle }}
                     />
 
@@ -181,15 +181,11 @@ export default async function Contacto() {
                     <ContactForm categories={categories} />
 
                     {/* HORARIO */}
-                    <div className="pt-16 space-y-14 ">
+                    <div className="pt-16 space-y-10 ">
                         <div className="pl-6">
                             <span
                                 className="text-white uppercase tracking-widest text-sm"
                                 dangerouslySetInnerHTML={{ __html: schedulePreTitle }}
-                            />
-                            <h2
-                                className="text-3xl md:text-[45px] font-heading font-bold text-primary mt-2"
-                                dangerouslySetInnerHTML={{ __html: scheduleTitle }}
                             />
                             <p
                                 className="text-gray-300 text-lg md:text-[25px] mt-4"
@@ -197,9 +193,13 @@ export default async function Contacto() {
                             />
                         </div>
 
-                        <div className="pl-6 space-y-4">
+                        <div className="pl-6 space-y-6">
+                            <h2
+                                className="text-3xl md:text-[45px] font-heading font-bold text-gold-gradient mb-6"
+                                dangerouslySetInnerHTML={{ __html: scheduleTitle }}
+                            />
                             <p className="text-white">
-                                <span className="text-primary font-bold text-lg md:text-[25px]">
+                                <span className="text-gold-gradient font-bold text-lg md:text-[25px]">
                                     <span dangerouslySetInnerHTML={{ __html: scheduleLabel }} />{" "}
                                     <span
                                         className="text-lg md:text-[25px] font-light text-white"

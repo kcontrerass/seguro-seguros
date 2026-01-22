@@ -65,12 +65,18 @@ export default function Hero({ data }: { data: any }) {
             {/* Main Content */}
             <div className="container mx-auto px-6 md:px-16 lg:px-24 relative z-10 pt-40 md:pt-50 flex-grow  flex flex-col justify-center min-h-[600px] md:min-h-[80vh]">
                 <div className="max-w-4xl">
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] md:w-[650px] mb-6 font-heading">
-                        {title}
-                    </h1>
+                    <h1
+                        className="text-3xl md:text-5xl lg:text-5xl font-bold text-white leading-[1.1] max-w-4xl mb-6 font-heading"
+                        dangerouslySetInnerHTML={{
+                            __html: title
+                                .replace(/ en /i, ' en <br /> ')
+                                .replace(/(protección patrimonial)/i, '<span class="text-gold-gradient">$1</span> <br />')
+                                .replace(/y (bienestar humano)/i, ' <span class="text-gold-gradient">$1</span>')
+                        }}
+                    />
 
                     {/* Gold Underline */}
-                    <div className="w-24 h-1.5 bg-primary mb-8 rounded-full"></div>
+                    <div className="w-24 h-1.5 bg-gold-gradient mb-8 rounded-full"></div>
 
                     <p className="text-lg md:text-2xl text-white font-sans max-w-2xl leading-relaxed mb-10 drop-shadow-md">
                         {description}

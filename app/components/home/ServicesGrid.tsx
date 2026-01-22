@@ -35,13 +35,13 @@ export default function ServicesGrid({ data }: { data: any }) {
         <section id="productos" className=" bg-[#0E1015]">
             <div className="mx-auto   ">
                 <div className="text-center mb-16 pt-20 px-6">
-                    <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4 tracking-wide uppercase">
+                    <h2 className="text-3xl md:text-4xl font-heading font-bold text-gold-gradient mb-4 tracking-wide uppercase">
                         {title}
                     </h2>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                         {description}
                     </p>
-                    <div className="w-16 h-1 bg-primary mx-auto mt-6"></div>
+                    <div className="w-16 h-1 bg-gold-gradient mx-auto mt-6"></div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">

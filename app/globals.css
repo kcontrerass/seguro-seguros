@@ -54,3 +54,16 @@ h6 {
       rgba(0, 0, 0, 0.5),
       #0E1015);
 }
+
+.text-gold-gradient {
+  background: linear-gradient(to right, #B69146 0%, #F5E6AD 50%, #B69146 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(to right, #B69146 0%, #F5E6AD 50%, #B69146 100%);
+}

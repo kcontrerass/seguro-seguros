@@ -23,16 +23,61 @@ export default function ContactForm({ categories }: ContactFormProps) {
     });
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [statusMessage, setStatusMessage] = useState("");
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const currentCategory = categories.find(cat => cat.id === selectedCategory);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear error when user types
+        if (errors[name]) {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
+        }
+    };
+
+    const validateForm = () => {
+        const newErrors: Record<string, string> = {};
+
+        if (!formData.name.trim()) {
+            newErrors.name = "El nombre es obligatorio";
+        } else if (formData.name.trim().length < 3) {
+            newErrors.name = "El nombre debe tener al menos 3 caracteres";
+        }
+
+        if (!formData.email.trim()) {
+            newErrors.email = "El correo es obligatorio";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = "El formato de correo no es válido";
+        }
+
+        if (!formData.phone.trim()) {
+            newErrors.phone = "El teléfono es obligatorio";
+        } else if (!/^\+?[\d\s-]{8,}$/.test(formData.phone)) {
+            newErrors.phone = "Ingresa un número de teléfono válido (mínimo 8 dígitos)";
+        }
+
+        if (!selectedCategory) {
+            newErrors.category = "Selecciona una categoría";
+        }
+
+        if (selectedCategory && !selectedProduct) {
+            newErrors.product = "Selecciona un seguro específico";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
+
         setStatus("loading");
 
         try {
@@ -84,6 +129,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
+                    error={errors.name}
                     required
                 />
 
@@ -94,6 +140,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        error={errors.phone}
                         required
                     />
                     <Input
@@ -103,6 +150,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
+                        error={errors.email}
                         required
                     />
                 </div>
@@ -118,8 +166,15 @@ export default function ContactForm({ categories }: ContactFormProps) {
                             onChange={(e) => {
                                 setSelectedCategory(e.target.value);
                                 setSelectedProduct("");
+                                if (errors.category) {
+                                    setErrors(prev => {
+                                        const newErrors = { ...prev };
+                                        delete newErrors.category;
+                                        return newErrors;
+                                    });
+                                }
                             }}
-                            className="w-full bg-white/30 border border-black/10 rounded-md px-4 py-4 text-black focus:outline-none focus:bg-white/50 appearance-none cursor-pointer"
+                            className={`w-full bg-white/30 border ${errors.category ? "border-red-500" : "border-black/10"} rounded-md px-4 py-4 text-black focus:outline-none focus:bg-white/50 appearance-none cursor-pointer`}
                         >
                             <option value="" disabled className="text-black/40">Seleccionar Categoría</option>
                             {categories.map((cat) => (
@@ -128,6 +183,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                                 </option>
                             ))}
                         </select>
+                        {errors.category && <p className="text-red-500 text-xs mt-1 font-bold">{errors.category}</p>}
                     </div>
 
                     {/* Product Select (Dependent) */}
@@ -137,9 +193,18 @@ export default function ContactForm({ categories }: ContactFormProps) {
                         </label>
                         <select
                             value={selectedProduct}
-                            onChange={(e) => setSelectedProduct(e.target.value)}
+                            onChange={(e) => {
+                                setSelectedProduct(e.target.value);
+                                if (errors.product) {
+                                    setErrors(prev => {
+                                        const newErrors = { ...prev };
+                                        delete newErrors.product;
+                                        return newErrors;
+                                    });
+                                }
+                            }}
                             disabled={!selectedCategory}
-                            className="w-full bg-white/30 border border-black/10 rounded-md px-4 py-4 text-black focus:outline-none focus:bg-white/50 appearance-none cursor-pointer"
+                            className={`w-full bg-white/30 border ${errors.product ? "border-red-500" : "border-black/10"} rounded-md px-4 py-4 text-black focus:outline-none focus:bg-white/50 appearance-none cursor-pointer`}
                         >
                             <option value="" disabled className="text-black/40">
                                 {!selectedCategory ? "Primero elige categoría" : "Seleccionar Seguro"}
@@ -150,6 +215,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                                 </option>
                             ))}
                         </select>
+                        {errors.product && <p className="text-red-500 text-xs mt-1 font-bold">{errors.product}</p>}
                     </div>
                 </div>
 
@@ -164,7 +230,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                     <button
                         type="submit"
                         disabled={status === "loading"}
-                        className="border border-white text-white font-semibold py-3 px-14 rounded-full uppercase tracking-[0.3em] hover:bg-black hover:text-[#C5A065] transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="border border-white text-white font-semibold py-3 px-14 rounded-full uppercase tracking-[0.3em] hover:bg-black hover:text-gold-gradient transition-all w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {status === "loading" ? "Enviando..." : "Enviar"}
                     </button>
@@ -182,7 +248,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                     )}
                 </div>
 
-                <p className="text-[14px] text-[#E6C046]">
+                <p className="text-[14px] text-white">
                     * Tus datos están seguros con nosotros.<br />
                     No compartimos tu información con terceros.
                 </p>
@@ -200,7 +266,8 @@ function Input({
     value,
     onChange,
     type = "text",
-    required = false
+    required = false,
+    error
 }: {
     label: string;
     placeholder: string;
@@ -209,6 +276,7 @@ function Input({
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string;
     required?: boolean;
+    error?: string;
 }) {
     return (
         <div>
@@ -222,8 +290,9 @@ function Input({
                 onChange={onChange}
                 placeholder={placeholder}
                 required={required}
-                className="w-full bg-white/30 border border-black/10 rounded-md px-4 py-4 text-black placeholder-black/40 focus:outline-none focus:bg-white/50"
+                className={`w-full bg-white/30 border ${error ? "border-red-500" : "border-black/10"} rounded-md px-4 py-4 text-black placeholder-black/40 focus:outline-none focus:bg-white/50`}
             />
+            {error && <p className="text-red-500 text-xs mt-1 font-bold">{error}</p>}
         </div>
     );
 }
@@ -232,12 +301,14 @@ function Textarea({
     label,
     name,
     value,
-    onChange
+    onChange,
+    error
 }: {
     label: string;
     name: string;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    error?: string;
 }) {
     return (
         <div>
@@ -250,8 +321,9 @@ function Textarea({
                 onChange={onChange}
                 rows={4}
                 placeholder="Escribe aquí tu mensaje"
-                className="w-full bg-white/30 border border-black/10 rounded-md px-4 py-4 text-black placeholder-black/40 resize-none focus:outline-none focus:bg-white/50"
+                className={`w-full bg-white/30 border ${error ? "border-red-500" : "border-black/10"} rounded-md px-4 py-4 text-black placeholder-black/40 resize-none focus:outline-none focus:bg-white/50`}
             />
+            {error && <p className="text-red-500 text-xs mt-1 font-bold">{error}</p>}
         </div>
     );
 }

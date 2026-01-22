@@ -24,7 +24,7 @@ export default function ProductsMenu({ isOpen, onClose, items = [] }: ProductsMe
             />
 
             {/* Menu Container */}
-            <div className="relative w-full bg-[#C5A065] rounded-3xl p-4 md:p-8 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="relative w-full bg-gold-gradient rounded-3xl p-4 md:p-8 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
 
                 {/* Close Button */}
 

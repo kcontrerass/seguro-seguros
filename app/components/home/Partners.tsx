@@ -28,7 +28,7 @@ export default function Partners({ data }: { data?: any }) {
     if (partners.length === 0) return null;
 
     return (
-        <section className="bg-primary py-16 overflow-hidden">
+        <section className="bg-primary py-24 overflow-hidden">
             <div className=" mx-auto px-6">
                 {/* Carousel */}
                 <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
@@ -40,7 +40,7 @@ export default function Partners({ data }: { data?: any }) {
                                     alt={partner.alt}
                                     width={160}
                                     height={160}
-                                    className="object-contain grayscale brightness-0 hover:grayscale-0 hover:brightness-100 transition mr-10 duration-300 h-10 md:h-12 w-auto"
+                                    className="object-contain grayscale brightness-0 transition mr-10 duration-300 h-10 md:h-12 w-auto"
                                 />
                             </div>
                         ))}
@@ -49,7 +49,7 @@ export default function Partners({ data }: { data?: any }) {
 
                 {/* Text */}
                 <div className="text-center mt-16 px-6">
-                    <h3 className="text-white/90 font-heading tracking-widest text-lg md:text-xl uppercase max-w-4xl mx-auto">
+                    <h3 className="text-[#E6C046] font-heading tracking-widest text-lg md:text-xl uppercase max-w-4xl mx-auto leading-relaxed">
                         {headingText}
                     </h3>
                 </div>
