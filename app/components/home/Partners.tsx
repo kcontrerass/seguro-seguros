@@ -49,7 +49,7 @@ export default function Partners({ data }: { data?: any }) {
 
                 {/* Text */}
                 <div className="text-center mt-16 px-6">
-                    <h3 className="text-[#E6C046] font-heading tracking-widest text-lg md:text-xl uppercase max-w-4xl mx-auto leading-relaxed">
+                    <h3 className="text-gold-gradient-2 text-[#E6C046] font-heading tracking-widest text-lg md:text-xl uppercase max-w-4xl mx-auto leading-relaxed">
                         {headingText}
                     </h3>
                 </div>
