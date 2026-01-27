@@ -29,6 +29,9 @@ export default function ContactForm({ categories }: ContactFormProps) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
+
+        if (name === "phone" && !/^[\d\s]*$/.test(value)) return;
+
         setFormData(prev => ({ ...prev, [name]: value }));
         // Clear error when user types
         if (errors[name]) {
@@ -136,7 +139,7 @@ export default function ContactForm({ categories }: ContactFormProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input
                         label="Teléfono *"
-                        placeholder="0000"
+                        placeholder="Tel: 1234 5678"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
