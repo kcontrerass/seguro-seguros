@@ -187,10 +187,7 @@ export default async function Contacto() {
                                 className="text-white uppercase tracking-widest text-sm"
                                 dangerouslySetInnerHTML={{ __html: schedulePreTitle }}
                             />
-                            <p
-                                className="text-gray-300 text-lg md:text-[25px] mt-4"
-                                dangerouslySetInnerHTML={{ __html: scheduleDesc }}
-                            />
+
                         </div>
 
                         <div className="pl-6 space-y-6">
@@ -198,9 +195,13 @@ export default async function Contacto() {
                                 className="text-3xl md:text-[45px] font-heading font-bold text-gold-gradient mb-6"
                                 dangerouslySetInnerHTML={{ __html: scheduleTitle }}
                             />
-                            <p className="text-white">
-                                <span className="text-gold-gradient font-bold text-lg md:text-[25px]">
-                                    <span dangerouslySetInnerHTML={{ __html: scheduleLabel }} />{" "}
+                            <p
+                                className="text-gray-300 text-lg md:text-[25px] mt-4"
+                                dangerouslySetInnerHTML={{ __html: scheduleDesc }}
+                            />
+                            <p className="text-white mb-0">
+                                <span className=" font-bold text-lg md:text-[25px]">
+                                    <span className="text-gold-gradient" dangerouslySetInnerHTML={{ __html: scheduleLabel }} />{" "}
                                     <span
                                         className="text-lg md:text-[25px] font-light text-white"
                                         dangerouslySetInnerHTML={{ __html: scheduleTime }}

@@ -79,9 +79,12 @@ export default async function Blog() {
                                                     if (block.type === "core/list") {
                                                         return (
                                                             <ul key={blockIdx} className="space-y-2 text-gray-300 leading-relaxed text-lg list-disc pl-6">
-                                                                {block.items.map((item: string, i: number) => (
-                                                                    <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
-                                                                ))}
+                                                                {block.items.map((item: string, i: number) => {
+                                                                    const formattedItem = item
+                                                                        .replace("Valor real:", '<span class="font-extrabold text-white">Valor real:</span>')
+                                                                        .replace("Valor de reposición:", '<span class="font-extrabold text-white">Valor de reposición:</span>');
+                                                                    return <li key={i} dangerouslySetInnerHTML={{ __html: formattedItem }} />;
+                                                                })}
                                                             </ul>
                                                         );
                                                     }
@@ -95,9 +98,9 @@ export default async function Blog() {
 
                             if (section.type === "core/paragraph") {
                                 return (
-                                    <div key={sectionIdx} className="mt-32 text-left mx-auto">
+                                    <div key={sectionIdx} className=" text-left mx-auto mb-0">
                                         <div
-                                            className="text-lg md:text-2xl text-white text-balance font-light leading-relaxed "
+                                            className="text-lg md:text-2xl text-white text-balance  font-light leading-relaxed "
                                             dangerouslySetInnerHTML={{ __html: section.content }}
                                         />
                                     </div>

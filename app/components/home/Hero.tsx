@@ -130,7 +130,7 @@ export default function Hero({ data }: { data: any }) {
                             <div
                                 key={index}
                                 className={`
-                        flex items-center gap-4 p-6
+                        flex items-center gap-4 py-6 px-4
                         border-b lg:border-b-0 lg:border-r border-white/20 last:border-0
                         group hover:bg-white/5 transition-colors
                         `}

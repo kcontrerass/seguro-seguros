@@ -11,11 +11,9 @@ interface FooterProps {
 }
 
 export default function Footer({ data }: FooterProps) {
-    const logoUrl = data?.logo.url || "/logo.svg";
     const logoAlt = data?.logo.alt || "Seguro Seguros Logo";
 
-    const siteName = data?.site_info.name || "SESE Corredores de Segurossss";
-    const siteDescription = data?.site_info.description || "Registro CS-218<br>Supervisado por la Superintendencia de Bancos de Guatemalaaaa";
+    const siteName = data?.site_info.name || "SESE Corredores de Seguros";
 
     const copyrightText = data?.copyright.text || `© ${new Date().getFullYear()} Todos los derechos reservados a Seguros Seguros.`;
 
@@ -38,42 +36,75 @@ export default function Footer({ data }: FooterProps) {
         { title: "Contacto", url: "#contact" },
     ];
 
-    // Helper to extract contact info from blocks
+    // Helper to extract info from the provided Gutenberg JSON structure
     const extractFromBlocks = (blocks: any[]) => {
         let phone = "";
         let email = "";
         let addressLines: string[] = [];
+        let legalLines: string[] = [];
+        let extractedLogoUrl = "";
+        let powerBy = { text: "", logo: "" };
 
-        const traverse = (items: any[]) => {
-            for (const item of items) {
-                if (item.type === "core/paragraph" && item.content) {
-                    const content = item.content.replace(/<[^>]*>/g, "").trim();
-                    if (!content) continue;
+        // The structure provided is: core/group -> children [core/columns (main), core/columns (power by)]
+        const mainGroup = blocks.find(b => b.type === "core/group");
+        const children = mainGroup?.children || [];
 
-                    if (content.includes("@") && content.includes(".")) {
-                        email = content;
-                    } else if (content.match(/\+?\d{3,}\s?\d{3,}\s?\d{3,}/)) {
-                        phone = content;
-                    } else if (content.includes("Via 4") || content.includes("Edificio TEC") || content.includes("Ciudad Guatemala") || content.includes("zona 4")) {
-                        addressLines.push(item.content); // Keep HTML for address if it has <br>
+        // 1. Process Main Columns (Navigation, Brand, Contact)
+        const mainColumns = children.find((b: any) => b.type === "core/columns");
+        if (mainColumns?.children) {
+            // Column 0: Brand & Legal
+            const brandCol = mainColumns.children[0];
+            brandCol.children?.forEach((b: any) => {
+                if (b.type === "core/image") extractedLogoUrl = b.image?.url;
+                if (b.type === "core/paragraph" && b.content) legalLines.push(b.content);
+            });
+
+            // Column 2 (usually): Contact Info (in the 50% width column)
+            // But let's traverse all to be safe for contact info (Phone, Address, Email)
+            mainColumns.children.forEach((col: any) => {
+                col.children?.forEach((b: any) => {
+                    if (b.type === "core/group") {
+                        // Check for contact details inside groups
+                        b.children?.forEach((subB: any) => {
+                            if (subB.type === "core/paragraph" && subB.content) {
+                                const content = subB.content.replace(/<[^>]*>/g, "").trim();
+                                if (content.includes("@")) email = content;
+                                else if (content.match(/\+?\d{3,}/)) phone = content;
+                                else if (content.includes("Via 4") || content.includes("Edificio TEC") || content.includes("Guatemala")) addressLines.push(subB.content);
+                            }
+                        });
                     }
-                }
-                if (item.children) traverse(item.children);
-            }
-        };
+                });
+            });
+        }
 
-        traverse(blocks);
-        return { phone, email, address: addressLines.join("<br>") };
+        // 2. Process Power By Columns
+        const powerColumns = children.find((b: any, i: number) => b.type === "core/columns" && i > 0);
+        if (powerColumns?.children?.length >= 2) {
+            const textCol = powerColumns.children[0];
+            const logoCol = powerColumns.children[1];
+            powerBy.text = textCol.children?.find((b: any) => b.type === "core/paragraph")?.content || "";
+            powerBy.logo = logoCol.children?.find((b: any) => b.type === "core/image")?.image?.url || "";
+        }
+
+        return { phone, email, address: addressLines.join("<br>"), legalLines, extractedLogoUrl, powerBy };
     };
 
-    const blockContact = extractFromBlocks(data?.content?.blocks || []);
+    const blockData = extractFromBlocks(data?.content?.blocks || []);
+
+    const logoUrl = blockData.extractedLogoUrl || data?.logo.url || "https://segurosegurosbe.aumenta.do/wp-content/uploads/2026/01/Frame-6.svg";
+
+    const siteDescription = blockData.legalLines.length > 0 ? blockData.legalLines : [
+        "Registro CS-218",
+        "Supervisado por la Superintendencia de Bancos de Guatemala"
+    ];
 
     const contactLinks = {
-        phone: menuItems.find(item => item.url.startsWith("tel:"))?.title || blockContact.phone || "+502 4811 9511",
-        phoneUrl: menuItems.find(item => item.url.startsWith("tel:"))?.url || `tel:${blockContact.phone.replace(/\s+/g, "")}`,
-        address: menuItems.find(item => item.slug.includes("via-4"))?.title || blockContact.address || "Via 4 1-00 zona 4 Campus Tecnológico, Edificio TEC II, Nivel 5 Oficina 504, Ciudad Guatemala",
-        email: menuItems.find(item => item.url.startsWith("mailto:"))?.title || blockContact.email || "info@sesecorredores.com",
-        emailUrl: menuItems.find(item => item.url.startsWith("mailto:"))?.url || `mailto:${blockContact.email}`
+        phone: menuItems.find(item => item.url.startsWith("tel:"))?.title || blockData.phone || "+502 4811 9511",
+        phoneUrl: menuItems.find(item => item.url.startsWith("tel:"))?.url || `tel:${blockData.phone.replace(/\s+/g, "")}`,
+        address: menuItems.find(item => item.slug.includes("via-4"))?.title || blockData.address || "Via 4 1-00 zona 4 Campus Tecnológico, Edificio TEC II, Nivel 5 Oficina 504, Ciudad Guatemala",
+        email: menuItems.find(item => item.url.startsWith("mailto:"))?.title || blockData.email || "info@sesecorredores.com",
+        emailUrl: menuItems.find(item => item.url.startsWith("mailto:"))?.url || `mailto:${blockData.email}`
     };
 
     return (
@@ -94,14 +125,15 @@ export default function Footer({ data }: FooterProps) {
 
                     <div className="space-y-2 text-sm text-gray-300">
                         <p className="font-semibold">{siteName}</p>
-                        <div
-                            className="max-w-xs"
-                            dangerouslySetInnerHTML={{ __html: siteDescription }}
-                        />
+                        <div className="max-w-xs space-y-1">
+                            {siteDescription.map((line, i) => (
+                                <p key={i} className="w-[250px]">{line}</p>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="pt-8">
-                        <p className="text-xs text-gray-500">
+                        <p className=" text-sm text-gray-300">
                             {copyrightText}
                         </p>
                     </div>
@@ -164,6 +196,23 @@ export default function Footer({ data }: FooterProps) {
                     </ul>
                 </div>
 
+            </div>
+
+            {/* Power By */}
+            <div className="container mx-auto px-6 mt-16 pt-8 border-t border-white/5 flex flex-col items-center justify-center gap-4">
+                <div className="flex items-center gap-4 text-gray-400 text-sm">
+                    <span>{blockData.powerBy.text || "powered by"}</span>
+                    <a href="https://aumenta.do" target="_blank" rel="noopener noreferrer">
+                        <Image
+                            src={blockData.powerBy.logo || "https://segurosegurosbe.aumenta.do/wp-content/uploads/2026/01/Imagen-17@2x-2.png"}
+                            alt="Aumenta Logo"
+                            width={100}
+                            height={24}
+                            className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                        />
+                    </a>
+
+                </div>
             </div>
         </footer>
     );
