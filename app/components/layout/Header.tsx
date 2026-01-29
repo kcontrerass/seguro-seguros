@@ -56,7 +56,25 @@ export default function Header({ data }: HeaderProps) {
 
     const logoUrl = data?.logo.url || "/segurologo.svg";
     const logoAlt = data?.logo.alt || "Seguro Seguros Logo";
-    const socialNetworks = data?.social_networks.networks || [];
+    const socialNetworks = (data?.social_networks.networks || []).filter(
+        social => {
+            const platform = social.platform.toLowerCase();
+            const url = social.url.toLowerCase();
+            const alt = social.image_alt.toLowerCase();
+
+            // Explicitly exclude anything related to "aumenta"
+            if (platform.includes("aumenta") || url.includes("aumenta") || alt.includes("aumenta")) {
+                return false;
+            }
+
+            // Only allow known social media platforms or items that look like social links
+            const isSocialPlatform = ["facebook", "instagram", "twitter", "linkedin", "whatsapp", "youtube"].some(
+                p => platform.includes(p) || url.includes(p)
+            );
+
+            return isSocialPlatform;
+        }
+    );
 
     const isLinkActive = (href: string, name?: string) => {
         if (!href) return false;
