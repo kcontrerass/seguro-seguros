@@ -34,13 +34,13 @@ export default function Partners({ data }: { data?: any }) {
                 <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
                     <div className="flex items-center gap-10 md:gap-16">
                         {[...partners, ...partners, ...partners].map((partner, i) => (
-                            <div key={i} className="flex-[0_0_auto] min-w-0 opacity-90 hover:opacity-100 transition-opacity">
+                            <div key={i} className="flex-[0_0_auto] ">
                                 <Image
                                     src={partner.src}
                                     alt={partner.alt}
                                     width={160}
                                     height={160}
-                                    className="object-contain grayscale brightness-0 transition mr-10 duration-300 h-10 md:h-12 w-auto"
+                                    className="object-contain  transition mr-10 duration-300 h-10 md:h-12 w-auto"
                                 />
                             </div>
                         ))}

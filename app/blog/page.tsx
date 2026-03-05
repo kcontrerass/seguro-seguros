@@ -59,19 +59,53 @@ export default async function Blog() {
                                             <div key={colIdx} className="space-y-4">
                                                 {column.blocks.map((block: any, blockIdx: number) => {
                                                     if (block.type === "core/paragraph") {
+                                                        const formattedBlock = (block.content || "")
+                                                            .replace("Vitalicio no significa", "👉 Vitalicio no significa");
                                                         const isTitle = block.attributes?.align === "center" || block.content.length < 30;
+                                                        const isDeducibleIntro = block.content?.includes("El deducible es la parte del siniestro");
                                                         return (
                                                             <div key={blockIdx}>
                                                                 {isTitle ? (
                                                                     <h3
                                                                         className={`font-heading font-bold text-white mb-6 ${block.attributes?.align === "center" ? "text-3xl text-center" : "text-xl uppercase tracking-wider"}`}
-                                                                        dangerouslySetInnerHTML={{ __html: block.content }}
+                                                                        dangerouslySetInnerHTML={{ __html: formattedBlock }}
                                                                     />
                                                                 ) : (
                                                                     <p
                                                                         className="text-gray-300 text-lg leading-relaxed"
-                                                                        dangerouslySetInnerHTML={{ __html: block.content }}
+                                                                        dangerouslySetInnerHTML={{ __html: formattedBlock }}
                                                                     />
+                                                                )}
+                                                                {isDeducibleIntro && (
+                                                                    <div className="mt-4 overflow-x-auto">
+                                                                        <table className="w-full text-sm border-collapse border border-gray-600 text-gray-300">
+                                                                            <thead>
+                                                                                <tr className="bg-white/10">
+                                                                                    <th className="border border-gray-600 px-3 py-2 text-left font-bold text-white">Tipo de póliza</th>
+                                                                                    <th className="border border-gray-600 px-3 py-2 text-left font-bold text-white">Forma del deducible</th>
+                                                                                    <th className="border border-gray-600 px-3 py-2 text-left font-bold text-white">Momento de aplicación *</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td className="border border-gray-600 px-3 py-2">Automóvil</td>
+                                                                                    <td className="border border-gray-600 px-3 py-2">% o monto fijo</td>
+                                                                                    <td className="border border-gray-600 px-3 py-2">Por siniestro</td>
+                                                                                </tr>
+                                                                                <tr className="bg-white/5">
+                                                                                    <td className="border border-gray-600 px-3 py-2">Gastos médicos</td>
+                                                                                    <td className="border border-gray-600 px-3 py-2">Monto fijo</td>
+                                                                                    <td className="border border-gray-600 px-3 py-2">Anual o por evento</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td className="border border-gray-600 px-3 py-2">Incendio</td>
+                                                                                    <td className="border border-gray-600 px-3 py-2">% o monto fijo</td>
+                                                                                    <td className="border border-gray-600 px-3 py-2">Por siniestro</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                        <p className="text-xs text-gray-500 mt-2">* El deducible aplica conforme a las condiciones de la póliza y al producto contratado con cada aseguradora.</p>
+                                                                    </div>
                                                                 )}
                                                             </div>
                                                         );
@@ -97,11 +131,14 @@ export default async function Blog() {
                             }
 
                             if (section.type === "core/paragraph") {
+                                console.log(section.content);
+                                const formattedContent = (section.content || "")
+                                    .replace("Vitalicio no significa", "👉 Vitalicio no significa");
                                 return (
                                     <div key={sectionIdx} className=" text-left mx-auto mb-0">
                                         <div
                                             className="text-lg md:text-2xl text-white text-balance  font-light leading-relaxed "
-                                            dangerouslySetInnerHTML={{ __html: section.content }}
+                                            dangerouslySetInnerHTML={{ __html: formattedContent }}
                                         />
                                     </div>
                                 );

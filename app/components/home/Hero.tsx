@@ -70,8 +70,8 @@ export default function Hero({ data }: { data: any }) {
                         dangerouslySetInnerHTML={{
                             __html: title
                                 .replace(/ en /i, ' en <br /> ')
-                                .replace(/(protección patrimonial)/i, '<span class="text-gold-gradient">$1</span> <br />')
-                                .replace(/y (bienestar humano)/i, ' <span class="text-gold-gradient">$1</span>')
+                                .replace(/(protección patrimonial y)/i, '<span class="text-gold-gradient">$1</span> <br />')
+                                .replace(/(bienestar humano)/i, ' <span class="text-gold-gradient">$1</span>')
                         }}
                     />
 
