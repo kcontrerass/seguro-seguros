@@ -116,7 +116,10 @@ export default async function Blog() {
                                                                 {block.items.map((item: string, i: number) => {
                                                                     const formattedItem = item
                                                                         .replace("Valor real:", '<span class="font-extrabold text-white">Valor real:</span>')
-                                                                        .replace("Valor de reposición:", '<span class="font-extrabold text-white">Valor de reposición:</span>');
+                                                                        .replace("Valor de reposición:", '<span class="font-extrabold text-white">Valor de reposición:</span>')
+                                                                        .replace("Valor Pactado (según tipo de vehículo y producto):", '<span class="font-extrabold text-white">Valor Pactado (según tipo de vehículo y producto):</span>')
+                                                                        .replace("Máximo Vitalicio:", '<span class="font-extrabold text-white">Máximo Vitalicio:</span>')
+                                                                        .replace("Anual Renovable (Gastos Médicos Mayores):", '<span class="font-extrabold text-white">Anual Renovable (Gastos Médicos Mayores):</span>');
                                                                     return <li key={i} dangerouslySetInnerHTML={{ __html: formattedItem }} />;
                                                                 })}
                                                             </ul>
