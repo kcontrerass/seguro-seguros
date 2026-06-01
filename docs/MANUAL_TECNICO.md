@@ -31,6 +31,11 @@ El sistema sigue un patrón **Jamstack (Headless CMS)**:
 2.  **Backend (WordPress como Headless CMS):** Servidor WordPress ubicado en `https://segurosegurosbe.aumenta.do` que expone los bloques de contenido creados en Gutenberg mediante APIs REST y GraphQL.
 3.  **Caché e Incremental Static Regeneration (ISR):** Next.js realiza consultas dinámicas al backend y almacena en caché las respuestas HTTP con un tiempo de revalidación de **60 segundos** (`revalidate: 60`). Esto garantiza un tiempo de carga instantáneo para los usuarios mientras mantiene el contenido fresco y dinámico de fondo.
 
+### ⚠️ Convención de Tipados y ESLint
+El linter de TypeScript en el proyecto (`eslint`) posee configurada de forma estricta la regla `@typescript-eslint/no-explicit-any`. Dado que el sitio web consume una estructura de bloques altamente dinámica y mutable desde Gutenberg en WordPress (`gutenberg_structure` mapeado como arreglos de objetos dinámicos), se utiliza con frecuencia el tipo genérico `any` para las estructuras que contienen los bloques, atributos y propiedades de respuesta de las APIs.
+*   **Comportamiento Esperado:** Al ejecutar `pnpm run lint`, el sistema arrojará advertencias e incidencias del tipo `Unexpected any. Specify a different type`. 
+*   **Recomendación:** Esto es el comportamiento estándar diseñado para permitir la máxima flexibilidad en el procesamiento dinámico de bloques Gutenberg de WordPress sin sobrecargar de tipos complejos que cambian con cada actualización en el CMS backend. Si se requiere omitir estas advertencias durante la compilación en servidores de Integración Continua (CI), se recomienda configurar Next.js para omitir errores de linting en `next.config.ts` o refinar progresivamente los tipos de Gutenberg en `lib/wordpress.ts` conforme las estructuras de bloques backend se estabilicen.
+
 ---
 
 ## 📂 Estructura de Carpetas
