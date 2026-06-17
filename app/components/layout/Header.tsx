@@ -86,7 +86,7 @@ export default function Header({ data }: HeaderProps) {
 
         // Normalize for comparison
         const normPath = pathname.replace(/\/$/, "") || "/";
-        const normHref = href.replace("https://segurosegurosbe.aumenta.do", "").replace(/\/$/, "") || "/";
+        const normHref = href.replace("https://sesecorredores.com/backend", "").replace(/\/$/, "") || "/";
 
         return normPath === normHref;
     };

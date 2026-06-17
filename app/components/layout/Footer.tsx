@@ -92,7 +92,7 @@ export default function Footer({ data }: FooterProps) {
 
     const blockData = extractFromBlocks(data?.content?.blocks || []);
 
-    const logoUrl = blockData.extractedLogoUrl || data?.logo.url || "https://segurosegurosbe.aumenta.do/wp-content/uploads/2026/01/Frame-6.svg";
+    const logoUrl = blockData.extractedLogoUrl || data?.logo.url || "https://sesecorredores.com/backend/wp-content/uploads/2026/01/Frame-6.svg";
 
     const siteDescription = blockData.legalLines.length > 0 ? blockData.legalLines : [
         "Registro CS-218",
@@ -204,7 +204,7 @@ export default function Footer({ data }: FooterProps) {
                     <span>{blockData.powerBy.text || "powered by"}</span>
                     <a href="https://aumenta.do" target="_blank" rel="noopener noreferrer">
                         <Image
-                            src={blockData.powerBy.logo || "https://segurosegurosbe.aumenta.do/wp-content/uploads/2026/01/Imagen-17@2x-2.png"}
+                            src={blockData.powerBy.logo || "https://sesecorredores.com/backend/wp-content/uploads/2026/01/Imagen-17@2x-2.png"}
                             alt="Aumenta Logo"
                             width={100}
                             height={24}

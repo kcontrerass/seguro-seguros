@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         formData.append('_wpcf7_unit_tag', '0e5e6e2');
 
         const res = await fetch(
-            'https://segurosegurosbe.aumenta.do/wp-json/contact-form-7/v1/contact-forms/337/feedback',
+            'https://sesecorredores.com/backend/wp-json/contact-form-7/v1/contact-forms/337/feedback',
             {
                 method: 'POST',
                 body: formData,

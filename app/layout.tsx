@@ -15,6 +15,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Seguro Seguros",
   description: "Tu aliado estratégico en protección patrimonial.",
+  icons: {
+    icon: "/segurologo.svg",
+    shortcut: "/segurologo.svg",
+    apple: "/segurologo.svg",
+  },
 };
 
 import Header from "./components/layout/Header";

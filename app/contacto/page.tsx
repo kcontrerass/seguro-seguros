@@ -61,7 +61,7 @@ export default async function Contacto() {
     const locationInfo = channelsCols[3]?.blocks?.[1]?.content || "Via 4 1-00 zona 4 Campus Tecnológico, Edificio TEC II, Nivel 5 Oficina 504, Ciudad Guatemala";
 
     const whatsappBlock = channelsCols[4]?.blocks?.find((b: any) => b.type === "core/image");
-    const whatsappIcon = whatsappBlock?.url || "https://segurosegurosbe.aumenta.do/wp-content/uploads/2026/01/whatsapp.svg";
+    const whatsappIcon = whatsappBlock?.url || "https://sesecorredores.com/backend/wp-content/uploads/2026/01/whatsapp.svg";
     const whatsappUrl = `https://wa.me/${phoneInfo.replace(/[^0-9]/g, '')}`;
     const whatsappText = channelsCols[4]?.blocks?.find((b: any) => b.type === "core/paragraph")?.content || "Escríbenos ahora";
 

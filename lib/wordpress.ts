@@ -1,6 +1,7 @@
 // lib/wordpress.ts
 
-const BASE_URL = "https://segurosegurosbe.aumenta.do/wp-json";
+const WP_BASE = "https://sesecorredores.com/backend";
+const BASE_URL = `${WP_BASE}/wp-json`;
 
 // --- Types ---
 
@@ -99,7 +100,7 @@ function fixUrl(url: string, slug?: string): string {
   if (slug && PRODUCT_SLUGS.includes(slug)) {
     if (!url.startsWith("/productos/")) {
       // If it's a relative URL from WP (like /vida-y-salud/) or absolute from same domain
-      const parsedUrl = url.replace("https://segurosegurosbe.aumenta.do", "");
+      const parsedUrl = url.replace(WP_BASE, "");
       if (parsedUrl.startsWith("/") && parsedUrl.includes(slug)) {
         return `/productos/${slug}`;
       }
@@ -110,7 +111,7 @@ function fixUrl(url: string, slug?: string): string {
   for (const productSlug of PRODUCT_SLUGS) {
     if (url.includes(`/${productSlug}`) && !url.includes(`/productos/${productSlug}`)) {
       // Check if it's an internal-ish link
-      if (url.startsWith("/") || url.includes("segurosegurosbe.aumenta.do")) {
+      if (url.startsWith("/") || url.includes("sesecorredores.com/backend")) {
         return `/productos/${productSlug}`;
       }
     }
